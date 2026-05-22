@@ -4,3 +4,6 @@ Packages/
 ProjectSettings/
 Temp/
 UserSettings/
+.funplay/
+.vscode/
+

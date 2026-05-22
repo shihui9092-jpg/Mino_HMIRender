@@ -1,0 +1,90 @@
+%YAML 1.1
+%TAG !u! tag:yousandi.cn,2023:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: _NightSkyMat
+  m_Shader: {fileID: 4800000, guid: e1721f0d163148345840be1f7697b2fd, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords:
+  - _ROTATIONSWITCH_ON
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: 2000
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: _StarsColor _SunRadio _SunRotation
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _BackGroundTex:
+        m_Texture: {fileID: 2800000, guid: fa542060c1215e34c878cd7d49c0992e, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _CubeMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _CubeMap1:
+        m_Texture: {fileID: 8900000, guid: 38ad880686d12554eb18ab1717740244, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MoonTex:
+        m_Texture: {fileID: 2800000, guid: ba5fcf51cd3e29440b6814a5b29593f1, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _StarTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _texcoord:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _CloudsBackgroundBrightness: 1
+    - _Float13: 6
+    - _Float16: 0.25
+    - _Float19: 0
+    - _Float9: 8
+    - _HorizonLineContribution: 1
+    - _HorizonLineExponent: 8
+    - _MoonBloom: 1
+    - _MoonIntensity: 0.1
+    - _MoonSize: 0.258
+    - _Rotation: 0
+    - _Rotation1: 0
+    - _RotationSpeed: 1
+    - _RotationSwitch: 1
+    - _RotationSwitch1: 0
+    - _SkyGradientExponent: 8
+    - _StarsIntensity: 0.15
+    - _StarsIntensityHigh: 1
+    - _SunBloom: 2
+    - _SunIntensity: 0
+    - _SunRadio: 0
+    - _SunRadius: 1
+    m_Colors:
+    - _CloudsBackgroundColor: {r: 0.2358489, g: 0.2358489, b: 0.2358489, a: 0}
+    - _Color0: {r: 0.09433933, g: 0.09433933, b: 0.09433933, a: 0}
+    - _Color1: {r: 1, g: 1, b: 1, a: 1}
+    - _HorizonLineColor: {r: 0.3301886, g: 0.3301886, b: 0.3301886, a: 0.7019608}
+    - _MoonColor: {r: 0.9103774, g: 0.9414006, b: 1, a: 1}
+    - _MoonDirection: {r: -60, g: -35, b: -35, a: 0}
+    - _SkyGradientBottom: {r: 0.2358491, g: 0.2358491, b: 0.2358491, a: 1}
+    - _SkyGradientTop: {r: 0.2358489, g: 0.2358489, b: 0.2358489, a: 1}
+    - _StarColor: {r: 1, g: 1, b: 1, a: 0}
+    - _StarTilling: {r: 8, g: 8, b: 0, a: 0}
+    - _StarTilling1: {r: 2, g: 1, b: 0, a: 0}
+    - _StarsColor: {r: 0, g: 0, b: 0, a: 0}
+    - _SunColor: {r: 1, g: 1, b: 1, a: 1}
+    - _SunRotation: {r: -60, g: -35, b: -35, a: 0}
+  m_BuildTextureStacks: []

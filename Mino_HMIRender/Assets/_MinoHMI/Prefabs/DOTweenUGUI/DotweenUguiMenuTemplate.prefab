@@ -1,0 +1,84 @@
+%YAML 1.1
+%TAG !u! tag:yousandi.cn,2023:
+--- !u!1 &100001
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 7
+  m_Component:
+  - component: {fileID: 224001}
+  - component: {fileID: 114001}
+  m_Layer: 0
+  m_HasEditorInfo: 1
+  m_Name: DotweenUguiMenuTemplate
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &224001
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100001}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 1280, y: 720}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &114001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100001}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f0a9d0f7d5b4b8da3c0f0a1b2c3d4e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mainMenuRoot: {fileID: 0}
+  mainMenuGrid: {fileID: 0}
+  mainMenuButtonTemplate: {fileID: 0}
+  subMenuPanel: {fileID: 0}
+  menuDataList:
+  - menuId: MainMenu_A
+    menuName: 主菜单A
+    subButtons:
+    - buttonId: Sub_A_1
+      buttonName: 子按钮A-1
+    - buttonId: Sub_A_2
+      buttonName: 子按钮A-2
+    - buttonId: Sub_A_3
+      buttonName: 子按钮A-3
+  - menuId: MainMenu_B
+    menuName: 主菜单B
+    subButtons:
+    - buttonId: Sub_B_1
+      buttonName: 子按钮B-1
+    - buttonId: Sub_B_2
+      buttonName: 子按钮B-2
+  - menuId: MainMenu_C
+    menuName: 主菜单C
+    subButtons:
+    - buttonId: Sub_C_1
+      buttonName: 子按钮C-1
+  defaultMainMenuIndex: 0
+  onMainMenuSelected:
+    m_PersistentCalls:
+      m_Calls: []
+  onSubMenuButtonClicked:
+    m_PersistentCalls:
+      m_Calls: []

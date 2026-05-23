@@ -8,6 +8,7 @@ namespace MinoHMI.DOTweenUGUI
 {
     /// <summary>
     /// UGUI 按钮视图，负责按钮文案与点击反馈动画。
+    /// 自定义外观：制作预制体并挂到 MenuController / SubMenuPanel 的 Template 字段，详见 自定义按钮指南.md
     /// </summary>
     public class DotweenUguiMenuItemView : MonoBehaviour
     {
@@ -56,6 +57,8 @@ namespace MinoHMI.DOTweenUGUI
 
         public void SetTitle(string title)
         {
+            CacheReferences();
+
             if (tmpLabel != null)
             {
                 tmpLabel.text = title;
@@ -170,6 +173,17 @@ namespace MinoHMI.DOTweenUGUI
             if (canvasGroup == null)
             {
                 canvasGroup = gameObject.AddComponent<CanvasGroup>();
+            }
+
+            // 运行时自动创建的按钮，文案在子节点 Label 上，需自动解析引用
+            if (tmpLabel == null)
+            {
+                tmpLabel = GetComponentInChildren<TMP_Text>(true);
+            }
+
+            if (legacyLabel == null)
+            {
+                legacyLabel = GetComponentInChildren<Text>(true);
             }
         }
     }

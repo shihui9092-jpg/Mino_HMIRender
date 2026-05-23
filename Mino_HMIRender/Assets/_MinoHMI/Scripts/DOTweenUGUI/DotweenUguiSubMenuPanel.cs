@@ -28,20 +28,145 @@ namespace MinoHMI.DOTweenUGUI
 
         private void Awake()
         {
+            if (!DotweenUguiSceneUtility.IsSceneInstance(this))
+            {
+                return;
+            }
+
+            BindStructureFromHierarchy();
+        }
+
+        /// <summary>
+        /// 绑定到当前 SubMenuRoot 场景实例上的 RectTransform 与 GridLayoutGroup，保留预制体参数。
+        /// </summary>
+        public void BindStructureFromHierarchy()
+        {
+            if (!DotweenUguiSceneUtility.IsSceneInstance(this))
+            {
+                return;
+            }
+
+            RectTransform ownRoot = transform as RectTransform;
+            if (ownRoot != null)
+            {
+                contentRoot = ownRoot;
+            }
+
+            GridLayoutGroup ownGrid = GetComponent<GridLayoutGroup>();
+            if (ownGrid != null && DotweenUguiSceneUtility.IsSceneInstance(ownGrid))
+            {
+                contentGrid = ownGrid;
+                return;
+            }
+
+            ResolveContentGridReference();
+        }
+
+        /// <summary>
+        /// 作者结构模式校验（由 MenuController 调用）。
+        /// </summary>
+        public void ValidateAuthorStructure(RectTransform authorMainMenuRoot)
+        {
             if (contentRoot == null)
             {
-                contentRoot = transform as RectTransform;
+                Debug.LogError("[DotweenUguiSubMenuPanel] Content Root 未配置。", this);
+                return;
             }
 
+            if (!DotweenUguiSceneUtility.IsSceneInstance(contentRoot))
+            {
+                Debug.LogError("[DotweenUguiSubMenuPanel] Content Root 必须是场景实例。", this);
+            }
+
+            if (ResolveContentGridReference() == null)
+            {
+                Debug.LogError("[DotweenUguiSubMenuPanel] Content Root 下未找到 GridLayoutGroup。", this);
+            }
+        }
+
+        private static bool IsSameOrChildOf(Transform target, Transform ancestor)
+        {
+            if (target == null || ancestor == null)
+            {
+                return false;
+            }
+
+            return target == ancestor || target.IsChildOf(ancestor);
+        }
+
+        private GridLayoutGroup ResolveContentGridReference()
+        {
+            if (contentRoot == null)
+            {
+                return null;
+            }
+
+            GridLayoutGroup assignedGrid = contentGrid;
+            if (assignedGrid != null)
+            {
+                bool isSceneInstance = DotweenUguiSceneUtility.IsSceneInstance(assignedGrid);
+                bool underRoot = IsSameOrChildOf(assignedGrid.transform, contentRoot.transform);
+
+                if (isSceneInstance && underRoot)
+                {
+                    return assignedGrid;
+                }
+
+                if (!isSceneInstance)
+                {
+                    Debug.LogWarning("[DotweenUguiSubMenuPanel] Content Grid 指向 Project 预制体资源，已忽略并自动查找。", this);
+                }
+                else
+                {
+                    Debug.LogWarning(
+                        $"[DotweenUguiSubMenuPanel] Content Grid（{DotweenUguiSceneUtility.GetHierarchyPath(assignedGrid.transform)}）与 Content Root（{DotweenUguiSceneUtility.GetHierarchyPath(contentRoot)}）不匹配，已自动从 Root 子树重新查找。",
+                        this);
+                }
+
+                contentGrid = null;
+            }
+
+            contentGrid = contentRoot.GetComponent<GridLayoutGroup>();
             if (contentGrid == null)
             {
-                contentGrid = GetComponentInChildren<GridLayoutGroup>(true);
+                contentGrid = contentRoot.GetComponentInChildren<GridLayoutGroup>(true);
             }
 
-            if (subButtonTemplate != null)
+            return contentGrid;
+        }
+
+        private RectTransform ResolveContentSpawnRoot()
+        {
+            if (contentRoot == null)
             {
-                subButtonTemplate.gameObject.SetActive(false);
+                Debug.LogError("[DotweenUguiSubMenuPanel] Content Root 未配置，无法生成子按钮。", this);
+                return null;
             }
+
+            if (!DotweenUguiSceneUtility.IsSceneInstance(contentRoot))
+            {
+                Debug.LogError("[DotweenUguiSubMenuPanel] Content Root 不是场景实例，无法生成子按钮。", this);
+                return null;
+            }
+
+            GridLayoutGroup grid = ResolveContentGridReference();
+            if (grid != null)
+            {
+                return grid.transform as RectTransform;
+            }
+
+            return contentRoot;
+        }
+
+        private void PurgeOrphanedRuntimeItems()
+        {
+            RectTransform spawnRoot = ResolveContentSpawnRoot();
+            if (spawnRoot == null)
+            {
+                return;
+            }
+
+            DotweenUguiMenuRuntimeItem.PurgeUnder(spawnRoot);
         }
 
         private void OnDestroy()
@@ -52,7 +177,13 @@ namespace MinoHMI.DOTweenUGUI
         public void Rebuild(IReadOnlyList<DotweenUguiSubButtonData> subButtonDataList, Action<DotweenUguiSubButtonData> onClick)
         {
             ClearItemViews();
-            if (subButtonDataList == null || subButtonDataList.Count == 0 || subButtonTemplate == null || contentRoot == null)
+            PurgeOrphanedRuntimeItems();
+
+            RectTransform spawnRoot = ResolveContentSpawnRoot();
+            if (subButtonDataList == null ||
+                subButtonDataList.Count == 0 ||
+                subButtonTemplate == null ||
+                spawnRoot == null)
             {
                 return;
             }
@@ -60,14 +191,15 @@ namespace MinoHMI.DOTweenUGUI
             for (int i = 0; i < subButtonDataList.Count; i++)
             {
                 DotweenUguiSubButtonData data = subButtonDataList[i];
-                DotweenUguiMenuItemView itemView = Instantiate(subButtonTemplate, contentRoot);
-                itemView.name = $"SubButton_{i}_{data.buttonId}";
+                DotweenUguiMenuItemView itemView = Instantiate(subButtonTemplate, spawnRoot);
+                itemView.name = $"{DotweenUguiMenuRuntimeItem.SubButtonNamePrefix}{i}_{data.buttonId}";
                 itemView.gameObject.SetActive(true);
+                DotweenUguiMenuRuntimeItem.Mark(itemView.gameObject);
                 itemView.Setup(data.buttonName, () => onClick?.Invoke(data));
                 itemViews.Add(itemView);
             }
 
-            LayoutRebuilder.ForceRebuildLayoutImmediate(contentRoot);
+            LayoutRebuilder.ForceRebuildLayoutImmediate(spawnRoot);
         }
 
         public void PlayAppearAnimation()
@@ -156,11 +288,19 @@ namespace MinoHMI.DOTweenUGUI
             contentRoot = targetContentRoot;
             contentGrid = targetContentGrid;
             subButtonTemplate = targetTemplate;
+        }
 
-            if (subButtonTemplate != null)
+        /// <summary>
+        /// 设置子按钮模板（由 MenuController 调用，优先级高于 Inspector 配置）。
+        /// </summary>
+        public void SetSubButtonTemplate(DotweenUguiMenuItemView template)
+        {
+            if (template == null)
             {
-                subButtonTemplate.gameObject.SetActive(false);
+                return;
             }
+
+            subButtonTemplate = template;
         }
     }
 }

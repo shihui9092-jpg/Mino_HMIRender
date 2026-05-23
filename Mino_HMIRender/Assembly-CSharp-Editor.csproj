@@ -64,6 +64,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Editor\MinoTools\VFXAssetBatchTools\VFXPrefabShenCopyTool.cs" />
+    <Compile Include="Assets\_MinoHMI\Scripts\DOTweenUGUI\Editor\DotweenUguiPrefabGenerator.cs" />
     <Compile Include="Assets\Editor\MinoTools\SubmeshSplitterTools\SubmeshChaiFenTool.cs" />
     <Compile Include="Assets\Editor\MinoTools\PerformanceTools\YunXingFpsBootstrap.cs" />
     <Compile Include="Assets\Editor\MinoTools\TaecgLibrary\XuLieTuExporterCtrl.cs" />

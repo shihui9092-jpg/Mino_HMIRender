@@ -1,5 +1,6 @@
 #if UNITY_EDITOR
 using System.Collections.Generic;
+using System.IO;
 using MinoHMI.UI.Application;
 using MinoHMI.UI.Core;
 using MinoHMI.UI.Interaction;
@@ -76,9 +77,9 @@ namespace MinoHMI.UI.Editor
             UIPageController pageController = root.AddComponent<UIPageController>();
             UICommandCenter commandCenter = root.AddComponent<UICommandCenter>();
             UICommandBridge commandBridge = root.AddComponent<UICommandBridge>();
-            root.AddComponent<HmiUiBootstrapBinder>();
-            root.AddComponent<UIInteractionArbiter>();
-            root.AddComponent<UiPerformanceGovernor>();
+            HmiUiBootstrapBinder bootstrapBinder = root.AddComponent<HmiUiBootstrapBinder>();
+            UIInteractionArbiter interactionArbiter = root.AddComponent<UIInteractionArbiter>();
+            UiPerformanceGovernor performanceGovernor = root.AddComponent<UiPerformanceGovernor>();
             root.AddComponent<UiFrameBudgetWatcher>();
 
             GameObject eventSystemObject = new GameObject("EventSystem");
@@ -92,7 +93,6 @@ namespace MinoHMI.UI.Editor
             RectTransform layerBase = CreateLayer(canvasObject.transform, "Layer_Base");
             RectTransform layerPopup = CreateLayer(canvasObject.transform, "Layer_Popup");
             RectTransform layerSystem = CreateLayer(canvasObject.transform, "Layer_System");
-            RectTransform demoBar = CreateDemoBar(layerBase);
 
             UIPageBase pageHome = CreatePage(layerBase, "Page_Home", UIPageId.Home, new Vector2(0f, 80f));
             UIPageBase pageCarPaint = CreatePage(layerBase, "Page_CarPaint", UIPageId.CarPaint, new Vector2(0f, -120f));
@@ -104,52 +104,19 @@ namespace MinoHMI.UI.Editor
             GameObject useCasesRoot = new GameObject("UseCases");
             useCasesRoot.transform.SetParent(root.transform, false);
 
-            CarPaintSwitchUseCase carPaintNext = CreateCarPaintUseCase(
-                useCasesRoot.transform,
-                "UseCase_CarPaintNext",
-                CarPaintSwitchUseCase.SwitchMode.NextPreset,
-                0);
-            CarPaintSwitchUseCase carPaintPreset0 = CreateCarPaintUseCase(
-                useCasesRoot.transform,
-                "UseCase_CarPaintPreset0",
-                CarPaintSwitchUseCase.SwitchMode.SpecifiedPreset,
-                0);
-            CameraPresetUseCase cameraApplySelected = CreateCameraUseCase(
-                useCasesRoot.transform,
-                "UseCase_CameraApplySelected",
-                CameraPresetUseCase.PresetOperation.ApplySelected,
-                0);
-            CameraPresetUseCase cameraApplyPreset0 = CreateCameraUseCase(
-                useCasesRoot.transform,
-                "UseCase_CameraApplyPreset0",
-                CameraPresetUseCase.PresetOperation.ApplyByIndex,
-                0);
-            UiPageNavigationUseCase pageOpenHome = CreatePageNavUseCase(
-                useCasesRoot.transform,
-                "UseCase_PageOpenHome",
-                UIPageId.Home,
-                pageController);
-            UiPageNavigationUseCase pageOpenCarPaint = CreatePageNavUseCase(
-                useCasesRoot.transform,
-                "UseCase_PageOpenCarPaint",
-                UIPageId.CarPaint,
-                pageController);
+            List<UICommandBridge.CommandRoute> commandRoutes = new List<UICommandBridge.CommandRoute>();
+            CreateCarPaintPresetUseCases(useCasesRoot.transform, commandRoutes);
 
-            ConfigureCommandBridge(commandBridge, commandCenter, new List<UICommandBridge.CommandRoute>
-            {
-                CreateRoute(HmiUiCommandIds.CarPaintNext, carPaintNext),
-                CreateRoute(HmiUiCommandIds.CarPaintPreset0, carPaintPreset0),
-                CreateRoute(HmiUiCommandIds.CameraApplySelected, cameraApplySelected),
-                CreateRoute(HmiUiCommandIds.CameraApplyPreset0, cameraApplyPreset0),
-                CreateRoute(HmiUiCommandIds.PageOpenHome, pageOpenHome),
-                CreateRoute(HmiUiCommandIds.PageOpenCarPaint, pageOpenCarPaint)
-            });
+            ConfigureCommandBridge(commandBridge, commandCenter, commandRoutes);
 
-            ConfigureBootstrapBinder(root.GetComponent<HmiUiBootstrapBinder>(), commandBridge);
-            ConfigureInteractionArbiter(root.GetComponent<UIInteractionArbiter>());
-            ConfigurePerformanceGovernor(root.GetComponent<UiPerformanceGovernor>());
+            ConfigureBootstrapBinder(bootstrapBinder, commandBridge);
+            ConfigureInteractionArbiter(interactionArbiter);
+            ConfigurePerformanceGovernor(performanceGovernor);
 
-            CreateDemoButtons(demoBar, commandCenter, pageHome.transform, pageCarPaint.transform);
+            CreateLabel(pageHome.transform, "PageHome_Label", "3D 车模 HMI", new Vector2(0f, 220f));
+
+            RectTransform colorDock = CreateCarPaintColorDock(layerBase);
+            CreateCarPaintColorSwatches(colorDock, commandCenter);
 
             return root;
         }
@@ -160,10 +127,9 @@ namespace MinoHMI.UI.Editor
             canvasObject.transform.SetParent(parent, false);
             Canvas canvas = canvasObject.AddComponent<Canvas>();
             canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-            CanvasScaler scaler = canvasObject.AddComponent<CanvasScaler>();
-            scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-            scaler.referenceResolution = new Vector2(1920f, 1080f);
-            scaler.matchWidthOrHeight = 0.5f;
+            canvasObject.AddComponent<CanvasScaler>().uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+            canvasObject.GetComponent<CanvasScaler>().referenceResolution = new Vector2(1920f, 1080f);
+            canvasObject.GetComponent<CanvasScaler>().matchWidthOrHeight = 0.5f;
             canvasObject.AddComponent<GraphicRaycaster>();
             return canvasObject;
         }
@@ -177,20 +143,126 @@ namespace MinoHMI.UI.Editor
             return rectTransform;
         }
 
-        private static RectTransform CreateDemoBar(RectTransform parent)
+        private static RectTransform CreateCarPaintColorDock(RectTransform parent)
         {
-            GameObject barObject = new GameObject("DemoCommandBar");
-            barObject.transform.SetParent(parent, false);
-            RectTransform rectTransform = barObject.AddComponent<RectTransform>();
+            GameObject dockObject = new GameObject("CarPaintColorDock");
+            dockObject.transform.SetParent(parent, false);
+            RectTransform rectTransform = dockObject.AddComponent<RectTransform>();
             rectTransform.anchorMin = new Vector2(0f, 0f);
             rectTransform.anchorMax = new Vector2(1f, 0f);
             rectTransform.pivot = new Vector2(0.5f, 0f);
-            rectTransform.sizeDelta = new Vector2(0f, 140f);
+            rectTransform.sizeDelta = new Vector2(0f, 150f);
             rectTransform.anchoredPosition = Vector2.zero;
 
-            Image background = barObject.AddComponent<Image>();
-            background.color = new Color(0.08f, 0.08f, 0.08f, 0.88f);
+            Image background = dockObject.AddComponent<Image>();
+            background.color = new Color(0.06f, 0.06f, 0.06f, 0.92f);
+
+            HorizontalLayoutGroup layoutGroup = dockObject.AddComponent<HorizontalLayoutGroup>();
+            layoutGroup.padding = new RectOffset(32, 32, 20, 20);
+            layoutGroup.spacing = 20f;
+            layoutGroup.childAlignment = TextAnchor.MiddleCenter;
+            layoutGroup.childControlWidth = false;
+            layoutGroup.childControlHeight = false;
+            layoutGroup.childForceExpandWidth = false;
+            layoutGroup.childForceExpandHeight = false;
+
             return rectTransform;
+        }
+
+        private static CarPaintSwitchUseCase[] CreateCarPaintPresetUseCases(
+            Transform useCasesRoot,
+            List<UICommandBridge.CommandRoute> commandRoutes)
+        {
+            CarPaintSwitchUseCase[] useCases = new CarPaintSwitchUseCase[HmiUiCommandIds.CarPaintPresetCount];
+            for (int presetIndex = 0; presetIndex < HmiUiCommandIds.CarPaintPresetCount; presetIndex++)
+            {
+                useCases[presetIndex] = CreateCarPaintUseCase(
+                    useCasesRoot,
+                    $"UseCase_CarPaintPreset{presetIndex}",
+                    CarPaintSwitchUseCase.SwitchMode.SpecifiedPreset,
+                    presetIndex);
+
+                commandRoutes.Add(CreateRoute(
+                    HmiUiCommandIds.GetCarPaintPresetCommand(presetIndex),
+                    useCases[presetIndex]));
+            }
+
+            return useCases;
+        }
+
+        private static void CreateCarPaintColorSwatches(
+            RectTransform colorDock,
+            UICommandCenter commandCenter)
+        {
+            Color[] swatchColors =
+            {
+                Color.white,
+                Color.black,
+                new Color(1f, 0.01f, 0f, 1f),
+                new Color(0f, 0.82f, 1f, 1f),
+                new Color(0.42f, 0.42f, 0.42f, 1f),
+                new Color(1f, 0.73f, 0f, 1f)
+            };
+
+            string[] swatchNames =
+            {
+                "Swatch_White",
+                "Swatch_Black",
+                "Swatch_Red",
+                "Swatch_Blue",
+                "Swatch_Gray",
+                "Swatch_Yellow"
+            };
+
+            for (int index = 0; index < HmiUiCommandIds.CarPaintPresetCount; index++)
+            {
+                CreateColorSwatchButton(
+                    colorDock,
+                    swatchNames[index],
+                    swatchColors[index],
+                    HmiUiCommandIds.GetCarPaintPresetCommand(index),
+                    commandCenter);
+            }
+        }
+
+        private static void CreateColorSwatchButton(
+            RectTransform parent,
+            string objectName,
+            Color swatchColor,
+            string commandId,
+            UICommandCenter commandCenter)
+        {
+            GameObject buttonObject = new GameObject(objectName);
+            buttonObject.transform.SetParent(parent, false);
+
+            LayoutElement layoutElement = buttonObject.AddComponent<LayoutElement>();
+            layoutElement.preferredWidth = 96f;
+            layoutElement.preferredHeight = 96f;
+
+            RectTransform rectTransform = buttonObject.GetComponent<RectTransform>();
+            rectTransform.sizeDelta = new Vector2(96f, 96f);
+
+            Image image = buttonObject.AddComponent<Image>();
+            image.color = swatchColor;
+            Button button = buttonObject.AddComponent<Button>();
+            button.targetGraphic = image;
+
+            GameObject borderObject = new GameObject("Border");
+            borderObject.transform.SetParent(buttonObject.transform, false);
+            RectTransform borderRect = borderObject.AddComponent<RectTransform>();
+            StretchFull(borderRect);
+            borderRect.offsetMin = new Vector2(-3f, -3f);
+            borderRect.offsetMax = new Vector2(3f, 3f);
+            Image borderImage = borderObject.AddComponent<Image>();
+            borderImage.color = new Color(1f, 1f, 1f, 0.35f);
+            borderImage.raycastTarget = false;
+            borderObject.transform.SetAsFirstSibling();
+
+            UIButtonCommandBinder binder = buttonObject.AddComponent<UIButtonCommandBinder>();
+            SerializedObject serializedBinder = new SerializedObject(binder);
+            serializedBinder.FindProperty("commandCenter").objectReferenceValue = commandCenter;
+            serializedBinder.FindProperty("commandId").stringValue = commandId;
+            serializedBinder.ApplyModifiedPropertiesWithoutUndo();
         }
 
         private static UIPageBase CreatePage(RectTransform parent, string pageName, UIPageId pageId, Vector2 anchoredPosition)
@@ -211,63 +283,6 @@ namespace MinoHMI.UI.Editor
             serializedPage.FindProperty("root").objectReferenceValue = pageObject;
             serializedPage.ApplyModifiedPropertiesWithoutUndo();
             return page;
-        }
-
-        private static void CreateDemoButtons(
-            RectTransform demoBar,
-            UICommandCenter commandCenter,
-            Transform pageHomeRoot,
-            Transform pageCarPaintRoot)
-        {
-            float startX = -780f;
-            float stepX = 260f;
-            CreateCommandButton(demoBar, "Btn_CarPaintNext", "下一款车漆", startX + stepX * 0f, HmiUiCommandIds.CarPaintNext, commandCenter);
-            CreateCommandButton(demoBar, "Btn_CameraPreset0", "机位1", startX + stepX * 1f, HmiUiCommandIds.CameraApplyPreset0, commandCenter);
-            CreateCommandButton(demoBar, "Btn_PageCarPaint", "车漆页", startX + stepX * 2f, HmiUiCommandIds.PageOpenCarPaint, commandCenter);
-            CreateCommandButton(demoBar, "Btn_PageHome", "首页", startX + stepX * 3f, HmiUiCommandIds.PageOpenHome, commandCenter);
-            CreateCommandButton(demoBar, "Btn_CameraSelected", "当前机位", startX + stepX * 4f, HmiUiCommandIds.CameraApplySelected, commandCenter);
-            CreateCommandButton(demoBar, "Btn_CarPaintPreset0", "车漆0", startX + stepX * 5f, HmiUiCommandIds.CarPaintPreset0, commandCenter);
-
-            CreateLabel(pageHomeRoot, "PageHome_Label", "首页（示例）", new Vector2(0f, 220f));
-            CreateLabel(pageCarPaintRoot, "PageCarPaint_Label", "车漆页（示例）", new Vector2(0f, 220f));
-        }
-
-        private static void CreateCommandButton(
-            RectTransform parent,
-            string objectName,
-            string label,
-            float anchoredX,
-            string commandId,
-            UICommandCenter commandCenter)
-        {
-            GameObject buttonObject = new GameObject(objectName);
-            buttonObject.transform.SetParent(parent, false);
-            RectTransform rectTransform = buttonObject.AddComponent<RectTransform>();
-            rectTransform.sizeDelta = new Vector2(240f, 88f);
-            rectTransform.anchoredPosition = new Vector2(anchoredX, 26f);
-
-            Image image = buttonObject.AddComponent<Image>();
-            image.color = new Color(0.2f, 0.55f, 0.95f, 1f);
-            Button button = buttonObject.AddComponent<Button>();
-
-            GameObject textObject = new GameObject("Text");
-            textObject.transform.SetParent(buttonObject.transform, false);
-            RectTransform textRect = textObject.AddComponent<RectTransform>();
-            StretchFull(textRect);
-            Text text = textObject.AddComponent<Text>();
-            text.text = label;
-            text.alignment = TextAnchor.MiddleCenter;
-            text.color = Color.white;
-            text.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-            text.resizeTextForBestFit = true;
-
-            UIButtonCommandBinder binder = buttonObject.AddComponent<UIButtonCommandBinder>();
-            SerializedObject serializedBinder = new SerializedObject(binder);
-            serializedBinder.FindProperty("commandCenter").objectReferenceValue = commandCenter;
-            serializedBinder.FindProperty("commandId").stringValue = commandId;
-            serializedBinder.ApplyModifiedPropertiesWithoutUndo();
-
-            button.targetGraphic = image;
         }
 
         private static void CreateLabel(Transform parent, string objectName, string label, Vector2 anchoredPosition)
@@ -427,11 +442,29 @@ namespace MinoHMI.UI.Editor
                 "Assets/Settings/URP-HMI.asset");
 
             UrpQualityLevelProfile lowProfile = LoadOrCreateQualityProfile(
-                "UrpQuality_Low", "Low", urpAsset, 0.75f, 1, 35f, 50f);
+                "UrpQuality_Low",
+                "Low",
+                urpAsset,
+                0.75f,
+                1,
+                35f,
+                50f);
             UrpQualityLevelProfile mediumProfile = LoadOrCreateQualityProfile(
-                "UrpQuality_Medium", "Medium", urpAsset, 0.9f, 2, 42f, 57f);
+                "UrpQuality_Medium",
+                "Medium",
+                urpAsset,
+                0.9f,
+                1,
+                42f,
+                57f);
             UrpQualityLevelProfile highProfile = LoadOrCreateQualityProfile(
-                "UrpQuality_High", "High", urpAsset, 1f, 2, 48f, 60f);
+                "UrpQuality_High",
+                "High",
+                urpAsset,
+                1f,
+                1,
+                48f,
+                60f);
 
             SerializedObject serializedGovernor = new SerializedObject(governor);
             serializedGovernor.FindProperty("targetUrpAsset").objectReferenceValue = urpAsset;

@@ -129,7 +129,8 @@ namespace MinoHMI.UI.Performance
             }
 
             activeAsset.renderScale = profile.RenderScale;
-            activeAsset.msaaSampleCount = profile.MsaaSampleCount;
+            // MSAA 与 TAA/TJSR/DLSS 互斥；HMI 使用后处理抗锯齿，运行时保持关闭 MSAA。
+            activeAsset.msaaSampleCount = 1;
             currentProfileIndex = profileIndex;
             return true;
         }

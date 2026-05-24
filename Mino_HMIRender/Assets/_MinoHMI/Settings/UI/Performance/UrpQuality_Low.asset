@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21f43bb4ae56a8b48ae6bd1cd407be7b, type: 3}
   m_Name: UrpQuality_Low
   m_EditorClassIdentifier: 
-  profileName: Medium
-  pipelineAsset: {fileID: 0}
-  renderScale: 1
+  profileName: Low
+  pipelineAsset: {fileID: 11400000, guid: 7b7fd9122c28c4d15b667c7040e3b3fd, type: 2}
+  renderScale: 0.75
   msaaSampleCount: 1
-  downgradeFpsThreshold: 42
-  upgradeFpsThreshold: 57
+  downgradeFpsThreshold: 35
+  upgradeFpsThreshold: 50

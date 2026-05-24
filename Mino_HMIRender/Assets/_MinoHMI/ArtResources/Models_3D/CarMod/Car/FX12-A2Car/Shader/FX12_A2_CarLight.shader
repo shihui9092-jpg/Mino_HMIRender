@@ -6,7 +6,7 @@ Shader "FX12_A2_CarLight"
 	{
 		[HideInInspector] _AlphaCutoff("Alpha Cutoff ", Range(0, 1)) = 0.5
 		[HideInInspector] _EmissionColor("Emission Color", Color) = (1,1,1,1)
-		[Toggle][Enum()] _LightControl( "LightControl", Float ) = 0
+		[Toggle] _LightControl( "LightControl", Float ) = 0
 		_MainIntensity( "MainIntensity", Float ) = 1
 		_MainColor( "MainColor", Color ) = ( 0, 0, 0, 0 )
 		_LightIntensity( "LightIntensity", Float ) = 1

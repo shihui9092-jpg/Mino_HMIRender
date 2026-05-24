@@ -10,8 +10,9 @@ using UnityEngine.Serialization;
 [System.Serializable]
 public class MinoCameraPreset
 {
-    [Tooltip("相机世界坐标")]
+    [Tooltip("相机世界坐标（已弃用，保留用于兼容旧配置）")]
     [FormerlySerializedAs("Pos")]
+    [HideInInspector]
     public Vector3 worldPosition;
 
     [Tooltip("轨道旋转角（x=俯仰，y=水平）")]
@@ -203,6 +204,10 @@ public class MinoCameraController : MonoBehaviour
 
     // 外部可叠加的俯仰基准偏移
     private float pitchAngleOffset;
+
+    // 机位切换冷却时间
+    private float lastPresetSwitchTime;
+    private const float PresetSwitchCooldown = 0.1f;
 
     private float smoothedOrbitDistance;
     private float currentYawSpeed;
@@ -494,7 +499,8 @@ public class MinoCameraController : MonoBehaviour
 
     private void ApplyCurrentViewToPreset(MinoCameraPreset preset)
     {
-        preset.worldPosition = transform.position;
+        // 不再保存 worldPosition,因为位置由轨道参数计算得出
+        // 仅保存轨道参数即可完整重建相机位置
         preset.eulerAngles = new Vector3(orbitPitch, orbitYaw, 0f);
         preset.orbitHeight = orbitHeight;
         preset.orbitOffset = orbitOffset;
@@ -705,6 +711,12 @@ public class MinoCameraController : MonoBehaviour
             return;
         }
 
+        // 防止过快切换导致飘移,添加 100ms 冷却时间
+        if (Time.unscaledTime - lastPresetSwitchTime < PresetSwitchCooldown)
+        {
+            return;
+        }
+
         for (int i = 0; i < cameraPresetSlots.Count; i++)
         {
             MinoCameraPresetSlot slot = cameraPresetSlots[i];
@@ -718,6 +730,7 @@ public class MinoCameraController : MonoBehaviour
                 if (slot.view != null)
                 {
                     ApplyPresetByIndex(i);
+                    lastPresetSwitchTime = Time.unscaledTime;
                 }
 
                 break;
@@ -1033,9 +1046,10 @@ public class MinoCameraController : MonoBehaviour
             return;
         }
 
+        // 使用 Complete() 而非 Kill(),确保前一个机位参数完整应用,避免中间状态残留
         if (activePresetTween != null && activePresetTween.IsActive())
         {
-            activePresetTween.Kill();
+            activePresetTween.Complete(withCallbacks: true);
         }
 
         Vector3 angles = preset.eulerAngles;
@@ -1044,8 +1058,11 @@ public class MinoCameraController : MonoBehaviour
         float shortestPitchTarget = orbitPitch + Mathf.DeltaAngle(orbitPitch, angles.x);
         isPresetTransitioning = true;
 
+        Debug.Log($"[MinoCameraController] 切换机位: yaw={shortestYawTarget:F1}°, pitch={shortestPitchTarget:F1}°, distance={preset.orbitDistance:F2}, duration={transitionDuration:F2}s", this);
+
         activePresetTween = DOTween.Sequence();
-        activePresetTween.Join(DOTween.To(() => transform.position, value => transform.position = value, preset.worldPosition, transitionDuration));
+        // 移除直接 Tween transform.position,避免与 ApplyOrbitTransform() 的轨道计算冲突
+        // 仅 Tween 轨道参数,让 ApplyOrbitTransform() 统一计算位置
         activePresetTween.Join(DOTween.To(() => orbitYaw, value => orbitYaw = value, shortestYawTarget, transitionDuration));
         activePresetTween.Join(DOTween.To(() => orbitPitch, value => orbitPitch = value, shortestPitchTarget, transitionDuration));
         activePresetTween.Join(DOTween.To(() => orbitHeight, value => orbitHeight = value, preset.orbitHeight, transitionDuration));

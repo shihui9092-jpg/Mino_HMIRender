@@ -78,6 +78,7 @@
     <Compile Include="Assets\Editor\MinoTools\HierarchyTools\HierarchyHuoYueToggle.cs" />
     <Compile Include="Assets\Editor\MinoTools\TaecgLibrary\XuLieTuExporterWin.cs" />
     <Compile Include="Assets\Editor\MinoTools\MaterialPropertyCleanupTools\MatYuShengPropertyCleaner.cs" />
+    <Compile Include="Assets\_MinoHMI\Scripts\CarPaint\Editor\CarRootCarPaintSetup.cs" />
     <Compile Include="Assets\Editor\MinoTools\ModelCheck\ModelZhiLiangCheckWin.cs" />
     <Compile Include="Assets\Editor\MinoTools\SceneAssetCheck\SceneWeiYongAssetCheckWin.cs" />
     <Compile Include="Assets\Editor\MinoTools\OneClickFileRenamer\YiJianFileRenameWin.cs" />

@@ -1219,19 +1219,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   paintPresets:
-  - displayName: "\u9ED8\u8BA4\u8F66\u6F06"
-    sourceMaterial: {fileID: 2100000, guid: fc968496dd6c90d41b79e5c7111cff40, type: 2}
-  - displayName: "\u9ED8\u8BA4\u8F66\u6F06"
-    sourceMaterial: {fileID: 2100000, guid: 366236ada8319cb4d9fa05d244463edb, type: 2}
-  - displayName: "\u9ED8\u8BA4\u8F66\u6F06"
-    sourceMaterial: {fileID: 2100000, guid: c467ef12eea9b7d47941cdf7b7b2cd61, type: 2}
-  - displayName: "\u9ED8\u8BA4\u8F66\u6F06"
-    sourceMaterial: {fileID: 2100000, guid: 1866b303ecdf63e40bb0053d55f14e24, type: 2}
-  - displayName: "\u9ED8\u8BA4\u8F66\u6F06"
+  - displayName: "\u73CD\u73E0\u767D"
     sourceMaterial: {fileID: 2100000, guid: b62083291f5d33d4a8767d25c5d6a97b, type: 2}
-  - displayName: "\u9ED8\u8BA4\u8F66\u6F06"
+  - displayName: "\u66DC\u77F3\u9ED1"
+    sourceMaterial: {fileID: 2100000, guid: fc968496dd6c90d41b79e5c7111cff40, type: 2}
+  - displayName: "\u70C8\u7130\u7EA2"
+    sourceMaterial: {fileID: 2100000, guid: 1866b303ecdf63e40bb0053d55f14e24, type: 2}
+  - displayName: "\u6674\u7A7A\u84DD"
+    sourceMaterial: {fileID: 2100000, guid: 366236ada8319cb4d9fa05d244463edb, type: 2}
+  - displayName: "\u91D1\u5C5E\u7070"
+    sourceMaterial: {fileID: 2100000, guid: c467ef12eea9b7d47941cdf7b7b2cd61, type: 2}
+  - displayName: "\u7ADE\u901F\u9EC4"
     sourceMaterial: {fileID: 2100000, guid: 99406e8aef4b7a9458cab19ba065e8f9, type: 2}
-  defaultPresetIndex: 1
+  defaultPresetIndex: 0
   transitionDuration: 1.2
   transitionEase: 12
 --- !u!1 &2667760741285392972

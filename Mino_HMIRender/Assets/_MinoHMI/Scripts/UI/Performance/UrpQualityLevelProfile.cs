@@ -15,6 +15,7 @@ namespace MinoHMI.UI.Performance
         [Tooltip("可选：使用该 URP Asset 整体切换档位（阴影等只读参数需在 Asset 内预配置）")]
         [SerializeField] private UniversalRenderPipelineAsset pipelineAsset;
         [SerializeField, Range(0.5f, 1.5f)] private float renderScale = 1f;
+        [Tooltip("仅作记录；运行时固定为 1（关闭 MSAA），避免与 TAA 冲突")]
         [SerializeField] private int msaaSampleCount = 1;
         [SerializeField] private float downgradeFpsThreshold = 42f;
         [SerializeField] private float upgradeFpsThreshold = 57f;

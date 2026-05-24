@@ -29,6 +29,7 @@ public class UICommandCenter : MonoBehaviour
     [SerializeField] private List<UICommandEntry> commandEntries = new List<UICommandEntry>();
 
     private readonly Dictionary<string, UICommandEntry> _commandMap = new Dictionary<string, UICommandEntry>();
+    private readonly Dictionary<string, UnityAction> _runtimeCommandMap = new Dictionary<string, UnityAction>();
 
     private void Awake()
     {
@@ -65,6 +66,12 @@ public class UICommandCenter : MonoBehaviour
             return;
         }
 
+        if (_runtimeCommandMap.TryGetValue(commandId, out UnityAction runtimeAction) && runtimeAction != null)
+        {
+            runtimeAction.Invoke();
+            return;
+        }
+
         if (!_commandMap.TryGetValue(commandId, out UICommandEntry entry))
         {
             Debug.LogWarning($"未找到命令：{commandId}", this);
@@ -72,6 +79,32 @@ public class UICommandCenter : MonoBehaviour
         }
 
         entry.Execute();
+    }
+
+    public bool RegisterRuntimeCommand(string commandId, UnityAction executeAction, bool allowOverwrite = true)
+    {
+        if (string.IsNullOrWhiteSpace(commandId) || executeAction == null)
+        {
+            return false;
+        }
+
+        if (_runtimeCommandMap.ContainsKey(commandId) && !allowOverwrite)
+        {
+            return false;
+        }
+
+        _runtimeCommandMap[commandId] = executeAction;
+        return true;
+    }
+
+    public bool UnregisterRuntimeCommand(string commandId)
+    {
+        if (string.IsNullOrWhiteSpace(commandId))
+        {
+            return false;
+        }
+
+        return _runtimeCommandMap.Remove(commandId);
     }
 
     // ==============================

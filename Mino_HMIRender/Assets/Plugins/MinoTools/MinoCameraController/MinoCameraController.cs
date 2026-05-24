@@ -474,6 +474,24 @@ public class MinoCameraController : MonoBehaviour
         }
     }
 
+    /// <summary>应用指定下标机位。</summary>
+    public bool ApplyPresetSlot(int presetIndex)
+    {
+        return ApplyPresetByIndex(presetIndex);
+    }
+
+    /// <summary>应用当前选中的机位。</summary>
+    public bool ApplySelectedPreset()
+    {
+        int selectedPresetIndex = GetSelectedPresetIndex();
+        if (selectedPresetIndex < 0)
+        {
+            return false;
+        }
+
+        return ApplyPresetByIndex(selectedPresetIndex);
+    }
+
     private void ApplyCurrentViewToPreset(MinoCameraPreset preset)
     {
         preset.worldPosition = transform.position;

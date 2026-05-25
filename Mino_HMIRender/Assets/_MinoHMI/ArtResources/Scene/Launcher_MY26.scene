@@ -409,6 +409,38 @@ Transform:
   - {fileID: 449952679}
   m_Father: {fileID: 1798490812}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &122946042
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 7
+  m_Component:
+  - component: {fileID: 122946043}
+  m_Layer: 0
+  m_HasEditorInfo: 1
+  m_Name: CarEffectControl
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &122946043
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 122946042}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1111375056}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &155504774
 GameObject:
   m_ObjectHideFlags: 0
@@ -856,7 +888,7 @@ GameObject:
   - component: {fileID: 277672031}
   m_Layer: 0
   m_HasEditorInfo: 1
-  m_Name: "TimeAndWeatherControl \u9ED8\u8BA4"
+  m_Name: EnvControl
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1665,7 +1697,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d320e7f013a827e4d9f42537105b9f60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sceneSwitchSlots:
+  objectSlots:
   - targetSceneName: "\u9ED8\u8BA4\u573A\u666F"
     storedObject: {fileID: 1798490811}
   - targetSceneName: "\u7ECF\u5178\u573A\u666F"
@@ -5274,6 +5306,8 @@ Transform:
   m_Children:
   - {fileID: 411512727}
   - {fileID: 277672030}
+  - {fileID: 1904782840}
+  - {fileID: 122946043}
   m_Father: {fileID: 2022515114}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1112391424
@@ -8468,6 +8502,67 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1879864674}
   m_Mesh: {fileID: 2292740577240791139, guid: 12319a608e2b8644395bad6b9c6d7b0c, type: 3}
+--- !u!1 &1904782839
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 7
+  m_Component:
+  - component: {fileID: 1904782840}
+  - component: {fileID: 1904782841}
+  m_Layer: 0
+  m_HasEditorInfo: 1
+  m_Name: CarPaintControl
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1904782840
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1904782839}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1111375056}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1904782841
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1904782839}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15fc17834d7848a409c18cc3dadf3d92, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  materialCategoryEntries:
+  - bodyMaterial: {fileID: 2100000, guid: cc75204ea039a7441918860f4e99bc35, type: 2}
+    categoryDisplayName: "\u8F66\u6F06"
+    variantMaterialSlots:
+    - variantMaterial: {fileID: 2100000, guid: 22cde7da18fd72c419b25cb1cdd646ea, type: 2}
+      transitionDuration: 1
+    - variantMaterial: {fileID: 2100000, guid: 9cc0d17448596c24896c40c126ed0d55, type: 2}
+      transitionDuration: 1
+    - variantMaterial: {fileID: 2100000, guid: 452c29a8facb45443877dd847397a386, type: 2}
+      transitionDuration: 1
+    - variantMaterial: {fileID: 2100000, guid: 2b402aa48f251224aa9f412e45f01596, type: 2}
+      transitionDuration: 1
+    - variantMaterial: {fileID: 2100000, guid: dfac35b81116f964198fe0868111b6d3, type: 2}
+      transitionDuration: 1
+    - variantMaterial: {fileID: 2100000, guid: 2b6a1a9d25229434ba25172be118998d, type: 2}
+      transitionDuration: 1
 --- !u!1 &1923051716 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2210279177206755948, guid: 1f3e464f2140e134bacb69a2d00f617b, type: 3}

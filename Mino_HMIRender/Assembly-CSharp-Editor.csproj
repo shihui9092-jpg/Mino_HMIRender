@@ -65,9 +65,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Editor\MinoTools\VFXAssetBatchTools\VFXPrefabShenCopyTool.cs" />
-    <Compile Include="Assets\_MinoHMI\Scripts\MY26HMI\ObjectControl\Editor\HmiSceneSwitcherEditor.cs" />
     <Compile Include="Assets\Editor\MinoTools\SubmeshSplitterTools\SubmeshChaiFenTool.cs" />
-    <Compile Include="Assets\_MinoHMI\Scripts\MY26HMI\MaterialControl\Editor\MaterialVariantCatalogEditor.cs" />
     <Compile Include="Assets\Editor\MinoTools\PerformanceTools\YunXingFpsBootstrap.cs" />
     <Compile Include="Assets\Editor\MinoTools\TaecgLibrary\XuLieTuExporterCtrl.cs" />
     <Compile Include="Assets\Editor\MinoTools\MinoCameraController\MinoCameraCtrlEditor.cs" />
@@ -79,12 +77,14 @@
     <Compile Include="Assets\Editor\MinoTools\ScenePerformanceCheck\SceneXingNengCheckWin.cs" />
     <Compile Include="Assets\Editor\MinoTools\HierarchyTools\HierarchyHuoYueToggle.cs" />
     <Compile Include="Assets\Editor\MinoTools\TaecgLibrary\XuLieTuExporterWin.cs" />
+    <Compile Include="Assets\_MinoHMI\Scripts\MinoControl\MaterialControl\Editor\MaterialVariantCatalogEditor.cs" />
     <Compile Include="Assets\Editor\MinoTools\MaterialPropertyCleanupTools\MatYuShengPropertyCleaner.cs" />
     <Compile Include="Assets\_MinoHMI\Scripts\CarPaint\Editor\CarRootCarPaintSetup.cs" />
     <Compile Include="Assets\Editor\MinoTools\ModelCheck\ModelZhiLiangCheckWin.cs" />
     <Compile Include="Assets\Editor\MinoTools\SceneAssetCheck\SceneWeiYongAssetCheckWin.cs" />
     <Compile Include="Assets\Editor\MinoTools\OneClickFileRenamer\YiJianFileRenameWin.cs" />
     <Compile Include="Assets\Editor\MinoTools\MinoCameraController\MinoCameraParamIO.cs" />
+    <Compile Include="Assets\_MinoHMI\Scripts\MinoControl\ObjectControl\Editor\ObjectSwitcherEditor.cs" />
     <Compile Include="Assets\Editor\MinoTools\VFXAssetBatchTools\ChongFuTexCleaner.cs" />
     <Compile Include="Assets\Editor\MinoTools\TextureCheck\TexSizeCheckWin.cs" />
   </ItemGroup>

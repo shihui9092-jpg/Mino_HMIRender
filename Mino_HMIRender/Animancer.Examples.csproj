@@ -125,8 +125,8 @@
     <Compile Include="Assets\Plugins\Animancer\Examples\Code\TimeScale.cs" />
     <Compile Include="Assets\Plugins\Animancer\Examples\09 Animator Controllers\03 3D Game Kit\States\LandingState.cs" />
     <Compile Include="Assets\Plugins\Animancer\Examples\06 State Machines\02 Characters\CharacterState.cs" />
-    <Compile Include="Assets\Plugins\Animancer\Examples\06 State Machines\04 Brains\States\IdleState.cs" />
     <Compile Include="Assets\Plugins\Animancer\Examples\06 State Machines\01 Game Manager\GameManagerFSM.ActionState.cs" />
+    <Compile Include="Assets\Plugins\Animancer\Examples\06 State Machines\04 Brains\States\IdleState.cs" />
     <Compile Include="Assets\Plugins\Animancer\Examples\05 Events\01 Footstep Events\FootstepEvents.cs" />
     <Compile Include="Assets\Plugins\Animancer\Examples\09 Animator Controllers\03 3D Game Kit\States\AttackState.cs" />
     <Compile Include="Assets\Plugins\Animancer\Examples\04 Directional Sprites\02 Character Controller\SpriteCharacterController.cs" />

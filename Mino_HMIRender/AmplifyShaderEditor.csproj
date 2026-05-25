@@ -84,11 +84,11 @@
     <Compile Include="Assets\Plugins\AmplifyShaderEditor\Plugins\Editor\Version\About.cs" />
     <Compile Include="Assets\Plugins\AmplifyShaderEditor\Plugins\Editor\Nodes\Operators\ScaleNode.cs" />
     <Compile Include="Assets\Plugins\AmplifyShaderEditor\Plugins\Editor\Native\FallbackVector3.cs" />
-    <Compile Include="Assets\Plugins\AmplifyShaderEditor\Plugins\Editor\Templates\TemplateLocalVarData.cs" />
     <Compile Include="Assets\Plugins\AmplifyShaderEditor\Plugins\Editor\Templates\TemplateDataCollector.cs" />
     <Compile Include="Assets\Plugins\AmplifyShaderEditor\Plugins\Editor\Templates\TemplateIdManager.cs" />
-    <Compile Include="Assets\Plugins\AmplifyShaderEditor\Plugins\Editor\Nodes\Vertex\ObjectScaleNode.cs" />
+    <Compile Include="Assets\Plugins\AmplifyShaderEditor\Plugins\Editor\Templates\TemplateLocalVarData.cs" />
     <Compile Include="Assets\Plugins\AmplifyShaderEditor\Plugins\Editor\Nodes\Constants\ShaderVariables\Transform\WorldToObjectMatrix.cs" />
+    <Compile Include="Assets\Plugins\AmplifyShaderEditor\Plugins\Editor\Nodes\Vertex\ObjectScaleNode.cs" />
     <Compile Include="Assets\Plugins\AmplifyShaderEditor\Plugins\Editor\Nodes\Constants\Vector3Node.cs" />
     <Compile Include="Assets\Plugins\AmplifyShaderEditor\Plugins\Editor\Nodes\LogicalOperators\ConditionalIfNode.cs" />
     <Compile Include="Assets\Plugins\AmplifyShaderEditor\Plugins\Editor\Templates\TemplatesStencilBufferModule.cs" />
@@ -184,8 +184,8 @@
     <Compile Include="Assets\Plugins\AmplifyShaderEditor\Plugins\Editor\Nodes\ImageEffects\DesaturateOpNode.cs" />
     <Compile Include="Assets\Plugins\AmplifyShaderEditor\Plugins\Editor\Nodes\LogicalOperators\AllOpNode.cs" />
     <Compile Include="Assets\Plugins\AmplifyShaderEditor\Plugins\Editor\Menu\Tools\ToolsMenuButton.cs" />
-    <Compile Include="Assets\Plugins\AmplifyShaderEditor\Plugins\Editor\Nodes\Constants\ShaderVariables\Transform\Texture0MatrixNode.cs" />
     <Compile Include="Assets\Plugins\AmplifyShaderEditor\Plugins\Editor\Nodes\Constants\ShaderVariables\Transform\MVPMatrixNode.cs" />
+    <Compile Include="Assets\Plugins\AmplifyShaderEditor\Plugins\Editor\Nodes\Constants\ShaderVariables\Transform\Texture0MatrixNode.cs" />
     <Compile Include="Assets\Plugins\AmplifyShaderEditor\Plugins\Editor\Menu\Palette\PalettePopUp.cs" />
     <Compile Include="Assets\Plugins\AmplifyShaderEditor\Plugins\Editor\Nodes\HelperFuncs\DecodeLightmapHlpNode.cs" />
     <Compile Include="Assets\Plugins\AmplifyShaderEditor\Plugins\Editor\Nodes\NodeAttributes.cs" />
@@ -261,12 +261,12 @@
     <Compile Include="Assets\Plugins\AmplifyShaderEditor\Plugins\Editor\Templates\TemplateSubShader.cs" />
     <Compile Include="Assets\Plugins\AmplifyShaderEditor\Plugins\Editor\Utils\Preferences.cs" />
     <Compile Include="Assets\Plugins\AmplifyShaderEditor\Plugins\Editor\Nodes\Operators\AbsOpNode.cs" />
-    <Compile Include="Assets\Plugins\AmplifyShaderEditor\Plugins\Editor\Nodes\SignalGeneratorNode.cs" />
     <Compile Include="Assets\Plugins\AmplifyShaderEditor\Plugins\Editor\Nodes\Master\AdditionalIncludesHelper.cs" />
     <Compile Include="Assets\Plugins\AmplifyShaderEditor\Plugins\Editor\Nodes\Master\FunctionSubtitle.cs" />
     <Compile Include="Assets\Plugins\AmplifyShaderEditor\Plugins\Editor\Nodes\Master\FunctionNode.cs" />
     <Compile Include="Assets\Plugins\AmplifyShaderEditor\Plugins\Editor\Nodes\SRP\HDRP\ASEDiffusionProfile.cs" />
     <Compile Include="Assets\Plugins\AmplifyShaderEditor\Plugins\Editor\Nodes\Operators\ComponentMaskNode.cs" />
+    <Compile Include="Assets\Plugins\AmplifyShaderEditor\Plugins\Editor\Nodes\SignalGeneratorNode.cs" />
     <Compile Include="Assets\Plugins\AmplifyShaderEditor\Plugins\Editor\Nodes\Textures\PannerNode.cs" />
     <Compile Include="Assets\Plugins\AmplifyShaderEditor\Plugins\Editor\Nodes\Constants\ShaderVariables\Transform\UnityProjectorClipMatrixNode.cs" />
     <Compile Include="Assets\Plugins\AmplifyShaderEditor\Plugins\Editor\Menu\Palette\PaletteWindow.cs" />
@@ -390,8 +390,8 @@
     <Compile Include="Assets\Plugins\AmplifyShaderEditor\Plugins\Editor\Utils\IOUtils.cs" />
     <Compile Include="Assets\Plugins\AmplifyShaderEditor\Plugins\Editor\Utils\ShortcutsManager.cs" />
     <Compile Include="Assets\Plugins\AmplifyShaderEditor\Plugins\Editor\Nodes\Misc\RelayNode.cs" />
-    <Compile Include="Assets\Plugins\AmplifyShaderEditor\Plugins\Editor\Menu\NodeWireReferencesUtils.cs" />
     <Compile Include="Assets\Plugins\AmplifyShaderEditor\Plugins\Editor\Nodes\Constants\ShaderVariables\Transform\InverseProjectionMatrixNode.cs" />
+    <Compile Include="Assets\Plugins\AmplifyShaderEditor\Plugins\Editor\Menu\NodeWireReferencesUtils.cs" />
     <Compile Include="Assets\Plugins\AmplifyShaderEditor\Plugins\Editor\Native\FallbackInt.cs" />
     <Compile Include="Assets\Plugins\AmplifyShaderEditor\Plugins\Editor\Nodes\Master\TessellationOpHelper.cs" />
     <Compile Include="Assets\Plugins\AmplifyShaderEditor\Plugins\Editor\Nodes\Constants\StaticSwitch.cs" />
@@ -459,8 +459,8 @@
     <Compile Include="Assets\Plugins\AmplifyShaderEditor\Plugins\Editor\Nodes\Vertex\VertexTangentNode.cs" />
     <Compile Include="Assets\Plugins\AmplifyShaderEditor\Plugins\Editor\Nodes\SurfaceShaderInputs\ScreenPosInputsNode.cs" />
     <Compile Include="Assets\Plugins\AmplifyShaderEditor\Plugins\Editor\Nodes\Textures\TFHCFlipBookUVAnimation.cs" />
-    <Compile Include="Assets\Plugins\AmplifyShaderEditor\Plugins\Editor\Templates\TemplatePass.cs" />
     <Compile Include="Assets\Plugins\AmplifyShaderEditor\Plugins\Editor\Nodes\Constants\Vector2Node.cs" />
+    <Compile Include="Assets\Plugins\AmplifyShaderEditor\Plugins\Editor\Templates\TemplatePass.cs" />
     <Compile Include="Assets\Plugins\AmplifyShaderEditor\Plugins\Editor\Nodes\Master\FunctionInput.cs" />
     <Compile Include="Assets\Plugins\AmplifyShaderEditor\Plugins\Editor\Nodes\Master\OutlineOpHelper.cs" />
     <Compile Include="Assets\Plugins\AmplifyShaderEditor\Plugins\Editor\Nodes\SurfaceShaderInputs\ScreenDepthNode.cs" />

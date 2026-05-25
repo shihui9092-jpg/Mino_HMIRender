@@ -64,32 +64,30 @@
     <Analyzer Include="C:\Program Files\Tuanjie\Hub\Editor\2022.3.62t7\Editor\Data\Tools\Unity.SourceGenerators\Unity.Properties.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\_MinoHMI\Scripts\MY26HMI\ObjectControl\HmiSceneObjectSlot.cs" />
     <Compile Include="Assets\_MinoHMI\Scripts\UI\Application\CameraPresetUseCase.cs" />
     <Compile Include="Assets\_MinoHMI\Scripts\UI\Performance\UrpQualityLevelProfile.cs" />
     <Compile Include="Assets\_MinoHMI\Scripts\CarPaint\CarPaintPropertySchema.cs" />
     <Compile Include="Assets\_MinoHMI\ArtResources\Models_3D\Object\ThemeScene\Reflection\ReflectionPlanar\PlanarReflectionsOptimized.cs" />
     <Compile Include="Assets\_MinoHMI\Scripts\UI\Core\IUIPage.cs" />
-    <Compile Include="Assets\_MinoHMI\Scripts\MY26HMI\MaterialControl\MaterialVariantApplyUseCase.cs" />
     <Compile Include="Assets\_MinoHMI\ArtResources\Models_3D\Object\ThemeScene\Reflection\ReflectionPlanar\PlanarReflections.cs" />
     <Compile Include="Assets\_MinoHMI\Scripts\UI\Core\UIRoot.cs" />
+    <Compile Include="Assets\_MinoHMI\Scripts\MinoControl\MaterialControl\MaterialVariantCatalog.cs" />
     <Compile Include="Assets\_MinoHMI\Scripts\UI\Application\HmiUiCommandIds.cs" />
     <Compile Include="Assets\_MinoHMI\Scripts\UI\Core\UIPageLayer.cs" />
     <Compile Include="Assets\_MinoHMI\Scripts\UI\Application\HmiUiBootstrapBinder.cs" />
+    <Compile Include="Assets\_MinoHMI\Scripts\MinoControl\MaterialControl\MaterialCategoryEntry.cs" />
+    <Compile Include="Assets\_MinoHMI\Scripts\MinoControl\MaterialControl\MaterialVariantApplyUseCase.cs" />
     <Compile Include="Assets\TutorialInfo\Scripts\Readme.cs" />
-    <Compile Include="Assets\_MinoHMI\Scripts\MY26HMI\MaterialControl\MaterialPropertySnapshot.cs" />
-    <Compile Include="Assets\_MinoHMI\Scripts\MY26HMI\MaterialControl\MaterialVariantCatalog.cs" />
     <Compile Include="Assets\_MinoHMI\Scripts\UI\Performance\UiPerformanceGovernor.cs" />
     <Compile Include="Assets\_MinoHMI\Scripts\UI\Application\IUiCommandExecutor.cs" />
-    <Compile Include="Assets\_MinoHMI\Scripts\MY26HMI\MaterialControl\MaterialVariantApplyUtility.cs" />
     <Compile Include="Assets\_MinoHMI\Scripts\UI\Performance\UiFrameBudgetWatcher.cs" />
     <Compile Include="Assets\_MinoHMI\Scripts\CarPaint\CarPaintSnapshot.cs" />
     <Compile Include="Assets\_MinoHMI\ArtResources\Models_3D\Object\ThemeScene\SkyBox\Shader\SkyboxPresetGenerator.cs" />
     <Compile Include="Assets\_MinoHMI\Scripts\CarPaint\CarPaintSlotUtility.cs" />
+    <Compile Include="Assets\_MinoHMI\Scripts\MinoControl\MaterialControl\MaterialVariantSlot.cs" />
     <Compile Include="Assets\_MinoHMI\Scripts\UI\Core\UIPageController.cs" />
     <Compile Include="Assets\_MinoHMI\ArtResources\Models_3D\Object\ThemeScene\Weather\Scripts\DayNightControl.cs" />
     <Compile Include="Assets\_MinoHMI\Scripts\CarPaint\CarPaintPresetSlot.cs" />
-    <Compile Include="Assets\_MinoHMI\Scripts\MY26HMI\ObjectControl\HmiSceneSwitcher.cs" />
     <Compile Include="Assets\_MinoHMI\ArtResources\Models_3D\Object\ThemeScene\Reflection\ReflectionPlanar\PlanarReflectionsNew.cs" />
     <Compile Include="Assets\_MinoHMI\ArtResources\Models_3D\Object\ThemeScene\Weather\Scripts\WeatherControl.cs" />
     <Compile Include="Assets\_MinoHMI\Scripts\CarPaint\CarPaintSwitcher.cs" />
@@ -102,8 +100,10 @@
     <Compile Include="Assets\_MinoHMI\Scripts\UI\Core\UIPageId.cs" />
     <Compile Include="Assets\_MinoHMI\ArtResources\Models_3D\Object\ThemeScene\Weather\Scripts\AttachToCamera.cs" />
     <Compile Include="Assets\_MinoHMI\ArtResources\Models_3D\Object\ThemeScene\Reflection\ReflectionRT\Reflection.cs" />
-    <Compile Include="Assets\_MinoHMI\Scripts\MY26HMI\MaterialControl\MaterialCategoryEntry.cs" />
-    <Compile Include="Assets\_MinoHMI\Scripts\MY26HMI\MaterialControl\MaterialVariantSlot.cs" />
+    <Compile Include="Assets\_MinoHMI\Scripts\MinoControl\ObjectControl\ObjectSwitcher.cs" />
+    <Compile Include="Assets\_MinoHMI\Scripts\MinoControl\MaterialControl\MaterialVariantApplyUtility.cs" />
+    <Compile Include="Assets\_MinoHMI\Scripts\MinoControl\MaterialControl\MaterialPropertySnapshot.cs" />
+    <Compile Include="Assets\_MinoHMI\Scripts\MinoControl\ObjectControl\ObjectSlot.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\_MinoHMI\ArtResources\Models_3D\CarMod\Car\FX12-A2CarSR\Shader\CarShadow.shader" />

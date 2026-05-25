@@ -58,36 +58,36 @@ Material:
     m_Ints: []
     m_Floats:
     - _AlphaCutoff: 0.5
-    - _EdgeFactor: 2
+    - _EdgeFactor: 0.01
     - _EnvironmentReflections: 1
-    - _FacingReflection: 0.64
-    - _FacingSpecular: 1
+    - _FacingReflection: 0.027
+    - _FacingSpecular: 0.82
     - _FlakeDensity: 50
-    - _FlakeFactor: 0.025
-    - _FlakeReflection: 8
+    - _FlakeFactor: 0.01
+    - _FlakeReflection: 0
     - _Float0: 1
     - _FlowControl: 0
     - _FlowSpeed: -0.35
     - _Occlusion: 1
-    - _PerpendicularReflection: 0.15
-    - _PerpendicularSpecular: 0.8341754
+    - _PerpendicularReflection: 0.051
+    - _PerpendicularSpecular: 1
     - _QueueControl: 0
     - _QueueOffset: 0
     - _RainAlpha: 1
     - _RainControl: 0
     - _ReceiveShadows: 1
-    - _ReflectionContrast: 1.16
-    - _ReflectionFactor: 0.15
-    - _Smoothness: 0.325
+    - _ReflectionContrast: 2
+    - _ReflectionFactor: 2
+    - _Smoothness: 0.357
     - _SpecularFactor: 10
     - _SpecularHighlights: 1
     - _Speed: 0.3
     m_Colors:
-    - _CarColor: {r: 0.78, g: 0.78, b: 0.78, a: 0}
-    - _ClearCoatColor: {r: 0.7169812, g: 0.7169812, b: 0.7169812, a: 1}
+    - _CarColor: {r: 0, g: 0, b: 0, a: 0}
+    - _ClearCoatColor: {r: 0.6226414, g: 0.6226414, b: 0.6226414, a: 1}
     - _Color0: {r: 0.1509431, g: 0.1509431, b: 0.1509431, a: 0.3568628}
-    - _EdgeColor: {r: 0.823, g: 0.823, b: 0.823, a: 0}
+    - _EdgeColor: {r: 0, g: 0, b: 0, a: 0}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 0}
     - _FlowColor: {r: 0.1647057, g: 0.2941175, b: 0.1960783, a: 1}
-    - _SpecularColor: {r: 0.7735849, g: 0.7735849, b: 0.7735849, a: 1}
+    - _SpecularColor: {r: 0.04, g: 0.04, b: 0.04, a: 1}
   m_BuildTextureStacks: []

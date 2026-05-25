@@ -165,8 +165,8 @@
     <Compile Include="Assets\Plugins\Animancer\Internal\Editor\GUI\AnimancerNodeDrawer.cs" />
     <Compile Include="Assets\Plugins\Animancer\Internal\Editor\Attributes\ThresholdLabelAttribute.cs" />
     <Compile Include="Assets\Plugins\Animancer\Utilities\SpriteRendererTextureSwap.cs" />
-    <Compile Include="Assets\Plugins\Animancer\Internal\Editor\ConversionCache.cs" />
     <Compile Include="Assets\Plugins\Animancer\Internal\Editor\GUI\TimelineGUI.cs" />
+    <Compile Include="Assets\Plugins\Animancer\Internal\Editor\ConversionCache.cs" />
     <Compile Include="Assets\Plugins\Animancer\Internal\Core\AnimancerState.EventDispatcher.cs" />
     <Compile Include="Assets\Plugins\Animancer\Internal\Interfaces\IHasKey.cs" />
     <Compile Include="Assets\Plugins\Animancer\Internal\Interfaces\ITransitionGUI.cs" />

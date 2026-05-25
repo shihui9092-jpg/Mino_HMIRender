@@ -1,13 +1,15 @@
 using System;
 using UnityEngine;
+using UnityEngine.Scripting.APIUpdating;
 
-namespace MinoHMI.MY26HMI
+namespace MinoHMI.MY26HMI.ObjectControl
 {
     /// <summary>
     /// 场景与对象凹槽绑定项：目标场景名与 Object 引用一一对应。
     /// </summary>
     [Serializable]
-    public class HmiSceneObjectSlot
+    [MovedFrom("MinoHMI.MY26HMI.ObjectControl.ObjectSceneSlot")]
+    public class ObjectSlot
     {
         [Tooltip("Build Settings 中已加入的目标场景名称，同时作为列表项标识")]
         public string targetSceneName;

@@ -5,21 +5,30 @@ using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace MinoHMI.MY26HMI.Editor
+namespace MinoHMI.MY26HMI.ObjectControl
 {
     /// <summary>
-    /// 场景切换组件 Inspector：提供按绑定项或当前激活场景切换对象显示/隐藏的按钮。
+    /// 对象切换组件 Inspector：提供按绑定项或当前激活场景切换对象显示/隐藏的按钮。
     /// </summary>
-    [CustomEditor(typeof(HmiSceneSwitcher))]
-    public class HmiSceneSwitcherEditor : UnityEditor.Editor
+    [CustomEditor(typeof(ObjectSwitcher))]
+    public class ObjectSwitcherEditor : UnityEditor.Editor
     {
-        private SerializedProperty sceneSwitchSlotsProperty;
+        private SerializedProperty objectSlotsProperty;
         private string resultMessage = string.Empty;
         private MessageType resultMessageType = MessageType.None;
 
         private void OnEnable()
         {
-            sceneSwitchSlotsProperty = serializedObject.FindProperty("sceneSwitchSlots");
+            objectSlotsProperty = serializedObject.FindProperty("objectSlots");
+            if (objectSlotsProperty == null)
+            {
+                objectSlotsProperty = serializedObject.FindProperty("objectSceneSlots");
+            }
+
+            if (objectSlotsProperty == null)
+            {
+                objectSlotsProperty = serializedObject.FindProperty("sceneSwitchSlots");
+            }
         }
 
         public override void OnInspectorGUI()
@@ -30,7 +39,7 @@ namespace MinoHMI.MY26HMI.Editor
                 "凹槽请拖入场景中的 GameObject 或组件。点击按钮可显示对应绑定对象，并隐藏列表中其他对象。",
                 MessageType.Info);
 
-            EditorGUILayout.PropertyField(sceneSwitchSlotsProperty, true);
+            EditorGUILayout.PropertyField(objectSlotsProperty, true);
 
             EditorGUILayout.Space(8f);
             DrawVisibilityButtons();
@@ -45,31 +54,31 @@ namespace MinoHMI.MY26HMI.Editor
 
         private void DrawVisibilityButtons()
         {
-            HmiSceneSwitcher sceneSwitcher = (HmiSceneSwitcher)target;
+            ObjectSwitcher objectSwitcher = (ObjectSwitcher)target;
             Scene activeScene = SceneManager.GetActiveScene();
             string activeSceneLabel = activeScene.IsValid() ? activeScene.name : "（无有效场景）";
 
             EditorGUILayout.LabelField("对象显示控制", EditorStyles.boldLabel);
             EditorGUILayout.LabelField("当前激活场景", activeSceneLabel);
 
-            using (new EditorGUI.DisabledScope(sceneSwitcher.SceneSwitchSlotCount <= 0))
+            using (new EditorGUI.DisabledScope(objectSwitcher.ObjectSlotCount <= 0))
             {
                 if (GUILayout.Button("按当前激活场景显示 / 隐藏其他", GUILayout.Height(26f)))
                 {
-                    ApplyVisibilityByActiveSceneWithUndo(sceneSwitcher);
+                    ApplyVisibilityByActiveSceneWithUndo(objectSwitcher);
                 }
             }
 
             EditorGUILayout.Space(4f);
 
-            if (sceneSwitchSlotsProperty == null || !sceneSwitchSlotsProperty.isArray)
+            if (objectSlotsProperty == null || !objectSlotsProperty.isArray)
             {
                 return;
             }
 
-            for (int index = 0; index < sceneSwitchSlotsProperty.arraySize; index++)
+            for (int index = 0; index < objectSlotsProperty.arraySize; index++)
             {
-                SerializedProperty slotProperty = sceneSwitchSlotsProperty.GetArrayElementAtIndex(index);
+                SerializedProperty slotProperty = objectSlotsProperty.GetArrayElementAtIndex(index);
                 SerializedProperty sceneNameProperty = slotProperty.FindPropertyRelative("targetSceneName");
                 string sceneName = sceneNameProperty != null ? sceneNameProperty.stringValue : string.Empty;
                 string buttonLabel = string.IsNullOrWhiteSpace(sceneName)
@@ -78,15 +87,15 @@ namespace MinoHMI.MY26HMI.Editor
 
                 if (GUILayout.Button(buttonLabel, GUILayout.Height(22f)))
                 {
-                    ApplyVisibilityAtIndexWithUndo(sceneSwitcher, index);
+                    ApplyVisibilityAtIndexWithUndo(objectSwitcher, index);
                 }
             }
         }
 
-        private void ApplyVisibilityByActiveSceneWithUndo(HmiSceneSwitcher sceneSwitcher)
+        private void ApplyVisibilityByActiveSceneWithUndo(ObjectSwitcher objectSwitcher)
         {
             Scene activeScene = SceneManager.GetActiveScene();
-            int activeIndex = sceneSwitcher.FindSlotIndexBySceneName(activeScene.name);
+            int activeIndex = objectSwitcher.FindSlotIndexBySceneName(activeScene.name);
             if (activeIndex < 0)
             {
                 resultMessageType = MessageType.Warning;
@@ -94,27 +103,27 @@ namespace MinoHMI.MY26HMI.Editor
                 return;
             }
 
-            ApplyVisibilityAtIndexWithUndo(sceneSwitcher, activeIndex);
+            ApplyVisibilityAtIndexWithUndo(objectSwitcher, activeIndex);
         }
 
-        private void ApplyVisibilityAtIndexWithUndo(HmiSceneSwitcher sceneSwitcher, int activeIndex)
+        private void ApplyVisibilityAtIndexWithUndo(ObjectSwitcher objectSwitcher, int activeIndex)
         {
-            List<Object> undoTargets = CollectBoundObjectsForUndo(sceneSwitcher);
+            List<Object> undoTargets = CollectBoundObjectsForUndo(objectSwitcher);
             if (undoTargets.Count > 0)
             {
-                Undo.RecordObjects(undoTargets.ToArray(), "HMI 场景对象显示切换");
+                Undo.RecordObjects(undoTargets.ToArray(), "对象显示切换");
             }
 
-            sceneSwitcher.ApplyVisibilityAtIndex(activeIndex);
+            objectSwitcher.ApplyVisibilityAtIndex(activeIndex);
 
-            if (!Application.isPlaying && sceneSwitcher.gameObject.scene.IsValid())
+            if (!Application.isPlaying && objectSwitcher.gameObject.scene.IsValid())
             {
-                EditorSceneManager.MarkSceneDirty(sceneSwitcher.gameObject.scene);
+                EditorSceneManager.MarkSceneDirty(objectSwitcher.gameObject.scene);
             }
 
-            EditorUtility.SetDirty(sceneSwitcher);
+            EditorUtility.SetDirty(objectSwitcher);
 
-            if (TryGetSceneSwitchSlot(sceneSwitcher, activeIndex, out HmiSceneObjectSlot activeSlot))
+            if (TryGetObjectSlot(objectSwitcher, activeIndex, out ObjectSlot activeSlot))
             {
                 string sceneLabel = activeSlot.HasTargetScene ? activeSlot.targetSceneName : $"索引 {activeIndex + 1}";
                 resultMessageType = MessageType.Info;
@@ -122,12 +131,12 @@ namespace MinoHMI.MY26HMI.Editor
             }
         }
 
-        private static List<Object> CollectBoundObjectsForUndo(HmiSceneSwitcher sceneSwitcher)
+        private static List<Object> CollectBoundObjectsForUndo(ObjectSwitcher objectSwitcher)
         {
             List<Object> undoTargets = new List<Object>();
-            for (int index = 0; index < sceneSwitcher.SceneSwitchSlotCount; index++)
+            for (int index = 0; index < objectSwitcher.ObjectSlotCount; index++)
             {
-                if (!TryGetSceneSwitchSlot(sceneSwitcher, index, out HmiSceneObjectSlot slot))
+                if (!TryGetObjectSlot(objectSwitcher, index, out ObjectSlot slot))
                 {
                     continue;
                 }
@@ -146,9 +155,9 @@ namespace MinoHMI.MY26HMI.Editor
             return undoTargets;
         }
 
-        private static bool TryGetSceneSwitchSlot(HmiSceneSwitcher sceneSwitcher, int index, out HmiSceneObjectSlot slot)
+        private static bool TryGetObjectSlot(ObjectSwitcher objectSwitcher, int index, out ObjectSlot slot)
         {
-            return sceneSwitcher.TryGetSceneSwitchSlot(index, out slot);
+            return objectSwitcher.TryGetObjectSlot(index, out slot);
         }
     }
 }

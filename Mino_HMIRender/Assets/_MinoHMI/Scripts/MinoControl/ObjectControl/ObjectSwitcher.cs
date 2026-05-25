@@ -1,28 +1,33 @@
 using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Scripting.APIUpdating;
+using UnityEngine.Serialization;
 
-namespace MinoHMI.MY26HMI
+namespace MinoHMI.MY26HMI.ObjectControl
 {
     /// <summary>
-    /// MY26 HMI 场景切换：场景名与对象凹槽按数组条目一一绑定。
+    /// 对象切换：场景名与对象凹槽按数组条目一一绑定。
     /// </summary>
     [DisallowMultipleComponent]
-    [AddComponentMenu("MinoHMI/MY26/场景切换")]
-    public class HmiSceneSwitcher : MonoBehaviour
+    [AddComponentMenu("MinoHMI/对象控制/对象切换")]
+    [MovedFrom("MinoHMI.MY26HMI.ObjectControl.ObjectSceneSwitcher")]
+    public class ObjectSwitcher : MonoBehaviour
     {
         [Header("场景与凹槽绑定列表")]
         [SerializeField]
         [Tooltip("可在 Inspector 中点击 + 添加；每项同时配置目标场景名与对象凹槽")]
-        private HmiSceneObjectSlot[] sceneSwitchSlots = Array.Empty<HmiSceneObjectSlot>();
+        [FormerlySerializedAs("objectSceneSlots")]
+        [FormerlySerializedAs("sceneSwitchSlots")]
+        private ObjectSlot[] objectSlots = Array.Empty<ObjectSlot>();
 
-        public int SceneSwitchSlotCount => sceneSwitchSlots?.Length ?? 0;
+        public int ObjectSlotCount => objectSlots?.Length ?? 0;
 
-        public bool TryGetSceneSwitchSlot(int index, out HmiSceneObjectSlot slot)
+        public bool TryGetObjectSlot(int index, out ObjectSlot slot)
         {
-            if (sceneSwitchSlots != null && index >= 0 && index < sceneSwitchSlots.Length)
+            if (objectSlots != null && index >= 0 && index < objectSlots.Length)
             {
-                slot = sceneSwitchSlots[index];
+                slot = objectSlots[index];
                 return slot != null;
             }
 
@@ -30,9 +35,9 @@ namespace MinoHMI.MY26HMI
             return false;
         }
 
-        public HmiSceneObjectSlot GetSceneSwitchSlot(int index)
+        public ObjectSlot GetObjectSlot(int index)
         {
-            return TryGetSceneSwitchSlot(index, out HmiSceneObjectSlot slot) ? slot : null;
+            return TryGetObjectSlot(index, out ObjectSlot slot) ? slot : null;
         }
 
         /// <summary>
@@ -40,14 +45,14 @@ namespace MinoHMI.MY26HMI
         /// </summary>
         public int FindSlotIndexBySceneName(string sceneName)
         {
-            if (string.IsNullOrWhiteSpace(sceneName) || sceneSwitchSlots == null)
+            if (string.IsNullOrWhiteSpace(sceneName) || objectSlots == null)
             {
                 return -1;
             }
 
-            for (int index = 0; index < sceneSwitchSlots.Length; index++)
+            for (int index = 0; index < objectSlots.Length; index++)
             {
-                HmiSceneObjectSlot slot = sceneSwitchSlots[index];
+                ObjectSlot slot = objectSlots[index];
                 if (slot == null || !slot.HasTargetScene)
                 {
                     continue;
@@ -67,21 +72,21 @@ namespace MinoHMI.MY26HMI
         /// </summary>
         public void ApplyVisibilityAtIndex(int activeIndex)
         {
-            if (sceneSwitchSlots == null || sceneSwitchSlots.Length == 0)
+            if (objectSlots == null || objectSlots.Length == 0)
             {
-                Debug.LogWarning($"[{nameof(HmiSceneSwitcher)}] 绑定列表为空，无法切换显示。", this);
+                Debug.LogWarning($"[{nameof(ObjectSwitcher)}] 绑定列表为空，无法切换显示。", this);
                 return;
             }
 
-            if (activeIndex < 0 || activeIndex >= sceneSwitchSlots.Length)
+            if (activeIndex < 0 || activeIndex >= objectSlots.Length)
             {
-                Debug.LogWarning($"[{nameof(HmiSceneSwitcher)}] 索引 {activeIndex} 无效，无法切换显示。", this);
+                Debug.LogWarning($"[{nameof(ObjectSwitcher)}] 索引 {activeIndex} 无效，无法切换显示。", this);
                 return;
             }
 
-            for (int index = 0; index < sceneSwitchSlots.Length; index++)
+            for (int index = 0; index < objectSlots.Length; index++)
             {
-                HmiSceneObjectSlot slot = sceneSwitchSlots[index];
+                ObjectSlot slot = objectSlots[index];
                 if (slot == null)
                 {
                     continue;
@@ -99,7 +104,7 @@ namespace MinoHMI.MY26HMI
             Scene activeScene = SceneManager.GetActiveScene();
             if (!activeScene.IsValid())
             {
-                Debug.LogWarning($"[{nameof(HmiSceneSwitcher)}] 当前无有效激活场景。", this);
+                Debug.LogWarning($"[{nameof(ObjectSwitcher)}] 当前无有效激活场景。", this);
                 return;
             }
 
@@ -107,7 +112,7 @@ namespace MinoHMI.MY26HMI
             if (activeIndex < 0)
             {
                 Debug.LogWarning(
-                    $"[{nameof(HmiSceneSwitcher)}] 未在绑定列表中找到场景「{activeScene.name}」，请检查 Target Scene Name。",
+                    $"[{nameof(ObjectSwitcher)}] 未在绑定列表中找到场景「{activeScene.name}」，请检查 Target Scene Name。",
                     this);
                 return;
             }
@@ -120,9 +125,9 @@ namespace MinoHMI.MY26HMI
         /// </summary>
         public void LoadSceneAtIndex(int index)
         {
-            if (!TryGetSceneSwitchSlot(index, out HmiSceneObjectSlot slot))
+            if (!TryGetObjectSlot(index, out ObjectSlot slot))
             {
-                Debug.LogWarning($"[{nameof(HmiSceneSwitcher)}] 索引 {index} 无效，无法加载场景。", this);
+                Debug.LogWarning($"[{nameof(ObjectSwitcher)}] 索引 {index} 无效，无法加载场景。", this);
                 return;
             }
 
@@ -136,7 +141,7 @@ namespace MinoHMI.MY26HMI
         {
             if (string.IsNullOrWhiteSpace(sceneName))
             {
-                Debug.LogWarning($"[{nameof(HmiSceneSwitcher)}] 场景名为空，无法加载。", this);
+                Debug.LogWarning($"[{nameof(ObjectSwitcher)}] 场景名为空，无法加载。", this);
                 return;
             }
 

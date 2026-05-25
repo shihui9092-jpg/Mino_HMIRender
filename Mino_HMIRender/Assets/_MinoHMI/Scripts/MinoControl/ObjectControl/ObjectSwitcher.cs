@@ -41,33 +41,6 @@ namespace MinoHMI.MY26HMI.ObjectControl
         }
 
         /// <summary>
-        /// 按场景名查找绑定列表索引，未找到返回 -1。
-        /// </summary>
-        public int FindSlotIndexBySceneName(string sceneName)
-        {
-            if (string.IsNullOrWhiteSpace(sceneName) || objectSlots == null)
-            {
-                return -1;
-            }
-
-            for (int index = 0; index < objectSlots.Length; index++)
-            {
-                ObjectSlot slot = objectSlots[index];
-                if (slot == null || !slot.HasTargetScene)
-                {
-                    continue;
-                }
-
-                if (string.Equals(slot.targetSceneName, sceneName, StringComparison.Ordinal))
-                {
-                    return index;
-                }
-            }
-
-            return -1;
-        }
-
-        /// <summary>
         /// 显示指定索引绑定对象，并隐藏列表中其他绑定对象。
         /// </summary>
         public void ApplyVisibilityAtIndex(int activeIndex)
@@ -94,30 +67,6 @@ namespace MinoHMI.MY26HMI.ObjectControl
 
                 slot.TrySetGameObjectActive(index == activeIndex);
             }
-        }
-
-        /// <summary>
-        /// 按当前激活场景名匹配绑定项，显示对应对象并隐藏其他对象。
-        /// </summary>
-        public void ApplyVisibilityByActiveScene()
-        {
-            Scene activeScene = SceneManager.GetActiveScene();
-            if (!activeScene.IsValid())
-            {
-                Debug.LogWarning($"[{nameof(ObjectSwitcher)}] 当前无有效激活场景。", this);
-                return;
-            }
-
-            int activeIndex = FindSlotIndexBySceneName(activeScene.name);
-            if (activeIndex < 0)
-            {
-                Debug.LogWarning(
-                    $"[{nameof(ObjectSwitcher)}] 未在绑定列表中找到场景「{activeScene.name}」，请检查 Target Scene Name。",
-                    this);
-                return;
-            }
-
-            ApplyVisibilityAtIndex(activeIndex);
         }
 
         /// <summary>

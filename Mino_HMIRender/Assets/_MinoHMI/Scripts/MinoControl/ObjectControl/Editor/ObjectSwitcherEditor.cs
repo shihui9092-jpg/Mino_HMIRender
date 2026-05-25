@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace MinoHMI.MY26HMI.ObjectControl
 {
     /// <summary>
-    /// 对象切换组件 Inspector：提供按绑定项或当前激活场景切换对象显示/隐藏的按钮。
+    /// 对象切换组件 Inspector：提供按绑定项切换对象显示/隐藏的按钮。
     /// </summary>
     [CustomEditor(typeof(ObjectSwitcher))]
     public class ObjectSwitcherEditor : UnityEditor.Editor
@@ -16,6 +15,24 @@ namespace MinoHMI.MY26HMI.ObjectControl
         private SerializedProperty objectSlotsProperty;
         private string resultMessage = string.Empty;
         private MessageType resultMessageType = MessageType.None;
+        private GUIStyle leftAlignedButtonStyle;
+
+        private GUIStyle LeftAlignedButtonStyle
+        {
+            get
+            {
+                if (leftAlignedButtonStyle == null)
+                {
+                    leftAlignedButtonStyle = new GUIStyle(GUI.skin.button)
+                    {
+                        alignment = TextAnchor.MiddleLeft
+                    };
+                    leftAlignedButtonStyle.padding = new RectOffset(8, 8, 4, 4);
+                }
+
+                return leftAlignedButtonStyle;
+            }
+        }
 
         private void OnEnable()
         {
@@ -55,55 +72,31 @@ namespace MinoHMI.MY26HMI.ObjectControl
         private void DrawVisibilityButtons()
         {
             ObjectSwitcher objectSwitcher = (ObjectSwitcher)target;
-            Scene activeScene = SceneManager.GetActiveScene();
-            string activeSceneLabel = activeScene.IsValid() ? activeScene.name : "（无有效场景）";
 
-            EditorGUILayout.LabelField("对象显示控制", EditorStyles.boldLabel);
-            EditorGUILayout.LabelField("当前激活场景", activeSceneLabel);
-
-            using (new EditorGUI.DisabledScope(objectSwitcher.ObjectSlotCount <= 0))
-            {
-                if (GUILayout.Button("按当前激活场景显示 / 隐藏其他", GUILayout.Height(26f)))
-                {
-                    ApplyVisibilityByActiveSceneWithUndo(objectSwitcher);
-                }
-            }
-
-            EditorGUILayout.Space(4f);
+            EditorGUILayout.LabelField("对象显示控制", EditorStyles.boldLabel, GUILayout.ExpandWidth(true));
 
             if (objectSlotsProperty == null || !objectSlotsProperty.isArray)
             {
                 return;
             }
 
-            for (int index = 0; index < objectSlotsProperty.arraySize; index++)
+            using (new EditorGUI.DisabledScope(objectSwitcher.ObjectSlotCount <= 0))
             {
-                SerializedProperty slotProperty = objectSlotsProperty.GetArrayElementAtIndex(index);
-                SerializedProperty sceneNameProperty = slotProperty.FindPropertyRelative("targetSceneName");
-                string sceneName = sceneNameProperty != null ? sceneNameProperty.stringValue : string.Empty;
-                string buttonLabel = string.IsNullOrWhiteSpace(sceneName)
-                    ? $"显示绑定项 {index + 1}"
-                    : $"显示「{sceneName}」并隐藏其他";
-
-                if (GUILayout.Button(buttonLabel, GUILayout.Height(22f)))
+                for (int index = 0; index < objectSlotsProperty.arraySize; index++)
                 {
-                    ApplyVisibilityAtIndexWithUndo(objectSwitcher, index);
+                    SerializedProperty slotProperty = objectSlotsProperty.GetArrayElementAtIndex(index);
+                    SerializedProperty sceneNameProperty = slotProperty.FindPropertyRelative("targetSceneName");
+                    string sceneName = sceneNameProperty != null ? sceneNameProperty.stringValue : string.Empty;
+                    string buttonLabel = string.IsNullOrWhiteSpace(sceneName)
+                        ? $"显示绑定项 {index + 1}"
+                        : $"显示「{sceneName}」并隐藏其他";
+
+                    if (GUILayout.Button(buttonLabel, LeftAlignedButtonStyle, GUILayout.Height(22f)))
+                    {
+                        ApplyVisibilityAtIndexWithUndo(objectSwitcher, index);
+                    }
                 }
             }
-        }
-
-        private void ApplyVisibilityByActiveSceneWithUndo(ObjectSwitcher objectSwitcher)
-        {
-            Scene activeScene = SceneManager.GetActiveScene();
-            int activeIndex = objectSwitcher.FindSlotIndexBySceneName(activeScene.name);
-            if (activeIndex < 0)
-            {
-                resultMessageType = MessageType.Warning;
-                resultMessage = $"未在绑定列表中找到场景「{activeScene.name}」。";
-                return;
-            }
-
-            ApplyVisibilityAtIndexWithUndo(objectSwitcher, activeIndex);
         }
 
         private void ApplyVisibilityAtIndexWithUndo(ObjectSwitcher objectSwitcher, int activeIndex)

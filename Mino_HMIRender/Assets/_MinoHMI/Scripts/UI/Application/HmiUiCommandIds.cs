@@ -18,7 +18,16 @@ namespace MinoHMI.UI.Application
         public const string PageOpenHome = "HMI.Page.OpenHome";
         public const string PageOpenCarPaint = "HMI.Page.OpenCarPaint";
 
+        public const string TimeWeatherVariant0 = "HMI.TimeWeather.Variant0";
+        public const string TimeWeatherVariant1 = "HMI.TimeWeather.Variant1";
+        public const string TimeWeatherVariant2 = "HMI.TimeWeather.Variant2";
+        public const string TimeWeatherVariant3 = "HMI.TimeWeather.Variant3";
+        public const string TimeWeatherVariant4 = "HMI.TimeWeather.Variant4";
+        public const string TimeWeatherVariant5 = "HMI.TimeWeather.Variant5";
+
         public const int CarPaintPresetCount = 6;
+
+        public const int TimeWeatherVariantCommandCount = 6;
 
         /// <summary>
         /// 获取车漆预设命令 ID（0~5）。
@@ -34,6 +43,23 @@ namespace MinoHMI.UI.Application
                 4 => CarPaintPreset4,
                 5 => CarPaintPreset5,
                 _ => $"HMI.CarPaint.Preset{presetIndex}"
+            };
+        }
+
+        /// <summary>
+        /// 获取时间天气材质变体命令 ID（variantIndex 0 对应 UI 变体 1）。
+        /// </summary>
+        public static string GetTimeWeatherVariantCommand(int variantIndex)
+        {
+            return variantIndex switch
+            {
+                0 => TimeWeatherVariant0,
+                1 => TimeWeatherVariant1,
+                2 => TimeWeatherVariant2,
+                3 => TimeWeatherVariant3,
+                4 => TimeWeatherVariant4,
+                5 => TimeWeatherVariant5,
+                _ => $"HMI.TimeWeather.Variant{variantIndex}"
             };
         }
     }

@@ -1,0 +1,56 @@
+%YAML 1.1
+%TAG !u! tag:yousandi.cn,2023:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Default_006
+  m_Shader: {fileID: 4800000, guid: b749eecd023176e45957f466ae15531d, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords:
+  - _NIGHTMODE_ON
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: _HorizonOffset
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs: []
+    m_Ints: []
+    m_Floats:
+    - _Exposure: 3
+    - _GradientIntensity: 0.1
+    - _GroundGradient: 0.01
+    - _HorizonBlur: 0.174
+    - _HorizonGradient: 0.01
+    - _HorizonOffset: -0.081
+    - _HorizonRange: 0.5
+    - _NightMode: 0
+    - _NightTransition: 1
+    - _StarBrightness: 1
+    - _StarDensity: 0.5
+    - _SunHaloIntensity: 0.52
+    - _SunHaloSize: 0.118
+    - _SunIntensity: 0
+    - _SunSize: 0.001
+    - _ZenithGradient: 0.034
+    m_Colors:
+    - _GroundBlendColor: {r: 0.6509434, g: 0.6462397, b: 0.6417319, a: 1}
+    - _GroundColor: {r: 0.23896407, g: 0.2526594, b: 0.2830189, a: 1}
+    - _HorizonColor: {r: 0.9433962, g: 0.9433962, b: 0.9433962, a: 1}
+    - _NightHorizonColor: {r: 0.049999982, g: 0.049999982, b: 0.11999995, a: 1}
+    - _NightZenithColor: {r: 0.02, g: 0.02, b: 0.079999976, a: 1}
+    - _SunColor: {r: 0.2264151, g: 0.16981132, b: 0.225659, a: 1}
+    - _SunDir: {r: 166.52, g: 20, b: -40, a: 0}
+    - _SunDirection: {r: 0.3, g: 0.5, b: 0.8, a: 0}
+    - _ZenithBlendColor: {r: 0.252314, g: 0.26254898, b: 0.2830189, a: 1}
+    - _ZenithColor: {r: 0.38174173, g: 0.376958, b: 0.4056604, a: 1}
+  m_BuildTextureStacks: []

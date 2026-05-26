@@ -91,7 +91,7 @@ MonoBehaviour:
   m_GRDEnableCollectLightProbe: 0
   m_GRDEnableCollectMotionVector: 0
   m_GRDUseTextureStoreData: 0
-  m_BRGShaderVariantStorageStripType: 0
+  m_BRGShaderVariantStorageStripType: 2
   m_ShadowType: 1
   m_LocalShadowsSupported: 0
   m_LocalShadowsAtlasResolution: 256

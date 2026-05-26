@@ -36,7 +36,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _CubeMap:
-        m_Texture: {fileID: 8900000, guid: 889a4665d46379041a54176656ce540a, type: 3}
+        m_Texture: {fileID: 8900000, guid: 969f6ffe73546dd40aa7978ac55ca04e, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _CubeMap_CG:
@@ -101,7 +101,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Alpha: 0.887
+    - _Alpha: 0.85
     - _AlphaClip: 0
     - _AlphaCutoff: 0.5
     - _AlphaToMask: 0
@@ -154,8 +154,8 @@ Material:
     - _BaseColor: {r: 0, g: 0, b: 0, a: 1}
     - _Charge_Color: {r: 0.01350364, g: 0.6886792, b: 0, a: 1}
     - _Color: {r: 0, g: 0, b: 0, a: 1}
-    - _CubeColor: {r: 0.4433959, g: 0.4433959, b: 0.4433959, a: 1}
-    - _CubeColorHDR: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+    - _CubeColor: {r: 0.13207549, g: 0.13207549, b: 0.13207549, a: 1}
+    - _CubeColorHDR: {r: 1, g: 1, b: 1, a: 1}
     - _CubeColor_CG: {r: 0.2735845, g: 0.2735845, b: 0.2735845, a: 0.8862745}
     - _CubeColor_HDR: {r: 0.5660378, g: 0.5660378, b: 0.5660378, a: 1}
     - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}

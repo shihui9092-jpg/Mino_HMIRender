@@ -27,18 +27,18 @@ Material:
     m_Floats:
     - _Exposure: 0.48
     - _GroundGradient: 0.01
-    - _HorizonBlur: 0.349
+    - _HorizonBlur: 0.626
     - _HorizonOffset: 0
-    - _HorizonRange: 2
+    - _HorizonRange: 1
     - _SunIntensity: 5
-    - _SunSize: 0.0288
-    - _ZenithGradient: 0.45
+    - _SunSize: 0.0425
+    - _ZenithGradient: 0.01
     m_Colors:
-    - _GroundBlendColor: {r: 0.37999994, g: 0.27999997, b: 0.17999998, a: 1}
-    - _GroundColor: {r: 0.5518868, g: 0.73310906, b: 1, a: 1}
+    - _GroundBlendColor: {r: 0.6509434, g: 0.6509434, b: 0.6509434, a: 1}
+    - _GroundColor: {r: 0, g: 0, b: 0, a: 1}
     - _HorizonColor: {r: 1, g: 1, b: 1, a: 1}
     - _SunColor: {r: 1, g: 0.95, b: 0.82, a: 1}
     - _SunDirection: {r: 0.3, g: 0.5, b: 0.8, a: 0}
-    - _ZenithBlendColor: {r: 0.27999997, g: 0.43999997, b: 0.76, a: 1}
-    - _ZenithColor: {r: 0, g: 0.2598424, b: 1, a: 1}
+    - _ZenithBlendColor: {r: 0.21698111, g: 0.21698111, b: 0.21698111, a: 1}
+    - _ZenithColor: {r: 0, g: 0, b: 0, a: 1}
   m_BuildTextureStacks: []

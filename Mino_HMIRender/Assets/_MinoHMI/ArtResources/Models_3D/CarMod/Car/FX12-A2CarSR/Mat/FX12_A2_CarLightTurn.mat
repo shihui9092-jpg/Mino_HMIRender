@@ -25,8 +25,7 @@ Material:
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
-  m_InvalidKeywords:
-  - _LIGHTCONTROL_ON
+  m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -141,10 +140,10 @@ Material:
     - _GlossMapScale: 1
     - _Glossiness: 1
     - _GlossyReflections: 1
-    - _LightControl: 1
+    - _LightControl: 0
     - _LightEmisiion: 4
     - _LightIntensity: 2
-    - _MainIntensity: 0.1
+    - _MainIntensity: 1
     - _Metallic: 0
     - _Mode: 0
     - _NormalScale: 0
@@ -171,6 +170,6 @@ Material:
     - _CubeColor_Car: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 0}
     - _LightColor: {r: 1, g: 0.59063005, b: 0, a: 1}
-    - _MainColor: {r: 1, g: 0.63569504, b: 0, a: 1}
+    - _MainColor: {r: 0.4056604, g: 0.4056604, b: 0.4056604, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
   m_BuildTextureStacks: []

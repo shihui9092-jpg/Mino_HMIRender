@@ -154,27 +154,27 @@ Material:
     - _AlphaClip: 0
     - _AlphaCutoff: 0.5
     - _AlphaToMask: 0
-    - _AuxLitScale: 0
+    - _AuxLitScale: 1.586
     - _Blend: 0
     - _BlendModePreserveSpecular: 1
     - _BumpScale: 1
-    - _CarPaintHSV_R: 0.75
+    - _CarPaintHSV_R: 1
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
     - _CoatFrontScale: 0
     - _CoatPower: 3.41
     - _CoatSaturation: 0.9
-    - _CoatScale: 2.91
+    - _CoatScale: 5
     - _Coat_IO: 1
     - _Contrast: 1
     - _Cull: 2
     - _Cutoff: 0.5
-    - _DarkOffset1: 0.7
+    - _DarkOffset1: 0.5
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
     - _DstBlendAlpha: 0
-    - _Emergence: 0.161
+    - _Emergence: 0.3
     - _Emission: 0.453
     - _EnvironmentReflections: 1
     - _Float0: 0.094
@@ -185,9 +185,9 @@ Material:
     - _GlossMapScale: 1
     - _Glossiness: 1
     - _GlossyReflections: 1
-    - _Horizontal: 283
+    - _Horizontal: 279
     - _MDarkScale: 1
-    - _MatteScale: 1.9
+    - _MatteScale: 4.34
     - _Metallic: 0
     - _Mode: 0
     - _NoiseIO: 1
@@ -198,7 +198,7 @@ Material:
     - _NormalScale2: 1
     - _NosieTiling: 30
     - _OcclusionIO: 1
-    - _OcclusionScale: 0.5
+    - _OcclusionScale: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.02
     - _QueueControl: 0
@@ -211,23 +211,23 @@ Material:
     - _SpecularHighlights: 1
     - _SrcBlend: 1
     - _SrcBlendAlpha: 1
-    - _SunScale: 2
-    - _SunShadow: 0.785
+    - _SunScale: 5
+    - _SunShadow: 0.9
     - _Surface: 0
-    - _TopDarkScale: 0.5
+    - _TopDarkScale: 0.325
     - _UVSec: 0
     - _WorkflowMode: 1
     - _ZWrite: 1
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
-    - _CarPaintColor: {r: 1, g: 0.6588097, b: 0, a: 1}
+    - _CarPaintColor: {r: 0.8490566, g: 0.5986587, b: 0.2523139, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _Color0: {r: 0, g: 0, b: 0, a: 0}
     - _Color_Coad: {r: 0, g: 0, b: 0, a: 1}
     - _CubeColor_Car: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 0}
-    - _EnvironmentColor: {r: 0.5566038, g: 0.5566038, b: 0.5566038, a: 1}
+    - _EnvironmentColor: {r: 0.5566037, g: 0.5566037, b: 0.5566037, a: 1}
     - _PaintColor: {r: 1, g: 0, b: 0, a: 1}
-    - _ShadowColor: {r: 0.1603774, g: 0.1603774, b: 0.1603774, a: 1}
+    - _ShadowColor: {r: 0, g: 0, b: 0, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
   m_BuildTextureStacks: []

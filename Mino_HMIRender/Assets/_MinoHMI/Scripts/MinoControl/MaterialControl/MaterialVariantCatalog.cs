@@ -25,6 +25,8 @@ namespace MinoHMI.MY26HMI.MaterialControl
             public readonly MaterialPropertySnapshot BlendedSnapshot = new MaterialPropertySnapshot();
             public float Duration;
             public float Elapsed;
+            public MaterialTransitionBlendMode BlendMode;
+            public MaterialDiscretePropertySwitchTiming DiscretePropertySwitchTiming;
         }
 
         [Header("本体材质球凹槽")]
@@ -157,6 +159,7 @@ namespace MinoHMI.MY26HMI.MaterialControl
             }
 
             int successCount = startedCount + instantCount;
+            bool hasPartialFailure = failureBuilder.Length > 0;
             if (successCount <= 0)
             {
                 resultMessage = failureBuilder.Length > 0
@@ -185,13 +188,14 @@ namespace MinoHMI.MY26HMI.MaterialControl
                 resultMessage += $"（跳过 {skipCount} 个组）";
             }
 
-            if (failureBuilder.Length > 0)
+            if (hasPartialFailure)
             {
-                resultMessage += "\n部分失败：\n" + failureBuilder;
+                resultMessage = "部分成功：" + resultMessage + "\n部分失败：\n" + failureBuilder;
             }
 
             RegisterEditorUpdateIfNeeded();
-            return failureBuilder.Length == 0;
+            // 只要存在成功应用（立即或平滑）即返回 true，避免“部分成功”被误判为失败
+            return successCount > 0;
         }
 
         public bool TryApplyVariantPropertiesToBody(int entryIndex, int variantIndex, out string errorMessage)
@@ -290,11 +294,26 @@ namespace MinoHMI.MY26HMI.MaterialControl
                     out errorMessage);
             }
 
-            BeginSmoothTransition(entry.bodyMaterial, variantMaterial, duration);
+            entry.TryGetVariantTransitionOptions(
+                variantIndex,
+                out MaterialTransitionBlendMode blendMode,
+                out MaterialDiscretePropertySwitchTiming discretePropertySwitchTiming);
+
+            BeginSmoothTransition(
+                entry.bodyMaterial,
+                variantMaterial,
+                duration,
+                blendMode,
+                discretePropertySwitchTiming);
             return true;
         }
 
-        private void BeginSmoothTransition(Material bodyMaterial, Material variantMaterial, float duration)
+        private void BeginSmoothTransition(
+            Material bodyMaterial,
+            Material variantMaterial,
+            float duration,
+            MaterialTransitionBlendMode blendMode,
+            MaterialDiscretePropertySwitchTiming discretePropertySwitchTiming)
         {
             if (bodyMaterial == null || variantMaterial == null || duration <= 0f)
             {
@@ -306,7 +325,9 @@ namespace MinoHMI.MY26HMI.MaterialControl
                 FromSnapshot = MaterialPropertySnapshot.FromMaterial(bodyMaterial),
                 ToSnapshot = MaterialPropertySnapshot.FromMaterial(variantMaterial),
                 Duration = duration,
-                Elapsed = 0f
+                Elapsed = 0f,
+                BlendMode = blendMode,
+                DiscretePropertySwitchTiming = discretePropertySwitchTiming
             };
 
             activeTransitions[bodyMaterial] = transitionState;
@@ -390,11 +411,29 @@ namespace MinoHMI.MY26HMI.MaterialControl
             MaterialTransitionState transitionState,
             float normalizedTime)
         {
+            float evaluatedBlend = EvaluateBlend(normalizedTime, transitionState.BlendMode);
             transitionState.BlendedSnapshot.LerpInto(
                 transitionState.FromSnapshot,
                 transitionState.ToSnapshot,
-                normalizedTime);
+                evaluatedBlend,
+                transitionState.DiscretePropertySwitchTiming);
             transitionState.BlendedSnapshot.ApplyTo(bodyMaterial);
+        }
+
+        /// <summary>
+        /// 根据配置计算插值曲线，提供可选过渡方式。
+        /// </summary>
+        private static float EvaluateBlend(float normalizedTime, MaterialTransitionBlendMode blendMode)
+        {
+            float clampedTime = Mathf.Clamp01(normalizedTime);
+            switch (blendMode)
+            {
+                case MaterialTransitionBlendMode.Linear:
+                    return clampedTime;
+                case MaterialTransitionBlendMode.SmoothStep:
+                default:
+                    return clampedTime * clampedTime * (3f - 2f * clampedTime);
+            }
         }
 
         private void RegisterEditorUpdateIfNeeded()

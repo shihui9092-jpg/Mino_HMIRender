@@ -1,0 +1,45 @@
+%YAML 1.1
+%TAG !u! tag:yousandi.cn,2023:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f98e3bfc02d567459be91f01ca43d95, type: 3}
+  m_Name: PlanarReflectionSettings01
+  m_EditorClassIdentifier: 
+  currentQuality: 1
+  lowQuality:
+    resolution: {x: 256, y: 256}
+    resolutionScale: 0.5
+    useHDR: 0
+    maxDistance: 30
+    updateRate: 2
+  mediumQuality:
+    resolution: {x: 512, y: 512}
+    resolutionScale: 0.75
+    useHDR: 0
+    maxDistance: 50
+    updateRate: 1
+  highQuality:
+    resolution: {x: 1024, y: 1024}
+    resolutionScale: 1
+    useHDR: 1
+    maxDistance: 80
+    updateRate: 1
+  ultraQuality:
+    resolution: {x: 2048, y: 2048}
+    resolutionScale: 1
+    useHDR: 1
+    maxDistance: 100
+    updateRate: 1
+  enableAutoLOD: 1
+  lodDistances:
+  - 20
+  - 50
+  - 100
+  reduceFPSWhenUnfocused: 1

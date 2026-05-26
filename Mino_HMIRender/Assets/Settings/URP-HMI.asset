@@ -33,13 +33,13 @@ MonoBehaviour:
   m_UpscalingFilter: 0
   m_AdvancedUpscalingFilterList: 
   m_TJSRSettings:
-    tjsrQuality: 1
+    tjsrQuality: 2
     tjsrBaseBlendFactor: 0
     m_tjsrContrastAdaptiveSharpening: 0
   m_MetalFXMode: 0
   m_FsrOverrideSharpness: 0
   m_FsrSharpness: 0.92
-  m_EnableLODCrossFade: 1
+  m_EnableLODCrossFade: 0
   m_LODCrossFadeDitheringType: 1
   m_ShEvalMode: 0
   m_MainLightRenderingMode: 1

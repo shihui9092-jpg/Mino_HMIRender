@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: BnNNtHuvACilIZNdsDABOd7a8w4OUjFaH1baO5VouHtL6EL1jpFL6HI=
+ShaderImporter:
+  externalObjects: {}
+  defaultTextures:
+  - _MainTex: {fileID: 2800000, guid: 78e5795930aef1d43b5348ef251b820b, type: 3}
+  - _MatCap: {fileID: 2800000, guid: 27d31325ee4c8d54aa09c8a5fcb66f1c, type: 3}
+  - _NormalTex: {fileID: 2800000, guid: 74231f2c1390d534d802dad2459c094a, type: 3}
+  - _CubeMap_Car: {fileID: 8900000, guid: 866538ff1fe86a34db3e2346a1aef9b0, type: 3}
+  - _MRA: {fileID: 2800000, guid: 8034ddba71e91c0409a561f39b1d7d6d, type: 3}
+  nonModifiableTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -66,9 +66,11 @@ namespace MinoHMI.MY26HMI.MaterialControl
         public void LerpInto(
             MaterialPropertySnapshot from,
             MaterialPropertySnapshot to,
-            float normalizedTime)
+            float normalizedTime,
+            MaterialDiscretePropertySwitchTiming discretePropertySwitchTiming)
         {
             float blend = Mathf.Clamp01(normalizedTime);
+            bool useTargetDiscreteProperties = ShouldUseTargetDiscreteProperties(blend, discretePropertySwitchTiming);
 
             floatValues.Clear();
             colorValues.Clear();
@@ -78,7 +80,7 @@ namespace MinoHMI.MY26HMI.MaterialControl
             LerpColorDictionary(from.colorValues, to.colorValues, colorValues, blend);
             LerpVectorDictionary(from.vectorValues, to.vectorValues, vectorValues, blend);
 
-            if (blend >= 1f)
+            if (useTargetDiscreteProperties)
             {
                 CopyIntDictionary(to.intValues, intValues);
                 CopyTextureDictionary(to.textureValues, textureValues);
@@ -89,6 +91,23 @@ namespace MinoHMI.MY26HMI.MaterialControl
                 CopyIntDictionary(from.intValues, intValues);
                 CopyTextureDictionary(from.textureValues, textureValues);
                 ShaderKeywords = from.ShaderKeywords;
+            }
+        }
+
+        /// <summary>
+        /// 计算离散属性切换时机。
+        /// </summary>
+        private static bool ShouldUseTargetDiscreteProperties(
+            float blend,
+            MaterialDiscretePropertySwitchTiming discretePropertySwitchTiming)
+        {
+            switch (discretePropertySwitchTiming)
+            {
+                case MaterialDiscretePropertySwitchTiming.AtStart:
+                    return blend > 0f;
+                case MaterialDiscretePropertySwitchTiming.AtEnd:
+                default:
+                    return blend >= 1f;
             }
         }
 
@@ -124,10 +143,8 @@ namespace MinoHMI.MY26HMI.MaterialControl
                 material.SetTexture(pair.Key, pair.Value);
             }
 
-            if (ShaderKeywords != null && ShaderKeywords.Length > 0)
-            {
-                material.shaderKeywords = ShaderKeywords;
-            }
+            // 始终回写关键词，确保目标为空关键词时可清空旧状态
+            material.shaderKeywords = ShaderKeywords ?? System.Array.Empty<string>();
         }
 
         private static void LerpFloatDictionary(

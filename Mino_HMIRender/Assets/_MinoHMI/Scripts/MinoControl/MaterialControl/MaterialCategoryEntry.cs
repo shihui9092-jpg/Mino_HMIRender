@@ -111,6 +111,23 @@ namespace MinoHMI.MY26HMI.MaterialControl
             return false;
         }
 
+        public bool TryGetVariantTransitionOptions(
+            int variantIndex,
+            out MaterialTransitionBlendMode blendMode,
+            out MaterialDiscretePropertySwitchTiming discretePropertySwitchTiming)
+        {
+            if (TryGetVariantSlot(variantIndex, out MaterialVariantSlot variantSlot))
+            {
+                blendMode = variantSlot.blendMode;
+                discretePropertySwitchTiming = variantSlot.discretePropertySwitchTiming;
+                return true;
+            }
+
+            blendMode = MaterialTransitionBlendMode.SmoothStep;
+            discretePropertySwitchTiming = MaterialDiscretePropertySwitchTiming.AtStart;
+            return false;
+        }
+
         public bool TryApplyVariantPropertiesToBody(int variantIndex, out string errorMessage)
         {
             if (!TryGetVariantMaterial(variantIndex, out Material variantMaterial))

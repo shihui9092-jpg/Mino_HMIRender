@@ -9,6 +9,7 @@ Shader "CommonGround"
 		_MainColor("MainColor", Color) = (1,1,1,1)
 		_SmoothMin("Smooth  Min", Float) = 0.05
 		_SmoothMax("Smooth  Max", Float) = 0.5
+		_SmoothPower("SmoothPower", Float) = 0
 
 
 		//_TessPhongStrength( "Tess Phong Strength", Range( 0, 1 ) ) = 0.5
@@ -263,6 +264,7 @@ Shader "CommonGround"
 			float4 _MainColor;
 			float _SmoothMin;
 			float _SmoothMax;
+			float _SmoothPower;
 			#ifdef ASE_TESSELLATION
 				float _TessPhongStrength;
 				float _TessValue;
@@ -436,7 +438,7 @@ Shader "CommonGround"
 				float dotResult13 = dot( ase_worldNormal , ase_worldViewDir );
 				float clampResult16 = clamp( dotResult13 , 0.0 , 1.0 );
 				float smoothstepResult17 = smoothstep( _SmoothMin , _SmoothMax , clampResult16);
-				float Alpha18 = smoothstepResult17;
+				float Alpha18 = pow( smoothstepResult17 , _SmoothPower );
 				
 				float3 BakedAlbedo = 0;
 				float3 BakedEmission = 0;
@@ -545,6 +547,7 @@ Shader "CommonGround"
 			float4 _MainColor;
 			float _SmoothMin;
 			float _SmoothMax;
+			float _SmoothPower;
 			#ifdef ASE_TESSELLATION
 				float _TessPhongStrength;
 				float _TessValue;
@@ -729,7 +732,7 @@ Shader "CommonGround"
 				float dotResult13 = dot( ase_worldNormal , ase_worldViewDir );
 				float clampResult16 = clamp( dotResult13 , 0.0 , 1.0 );
 				float smoothstepResult17 = smoothstep( _SmoothMin , _SmoothMax , clampResult16);
-				float Alpha18 = smoothstepResult17;
+				float Alpha18 = pow( smoothstepResult17 , _SmoothPower );
 				
 
 				float Alpha = Alpha18;
@@ -823,6 +826,7 @@ Shader "CommonGround"
 			float4 _MainColor;
 			float _SmoothMin;
 			float _SmoothMax;
+			float _SmoothPower;
 			#ifdef ASE_TESSELLATION
 				float _TessPhongStrength;
 				float _TessValue;
@@ -988,7 +992,7 @@ Shader "CommonGround"
 				float dotResult13 = dot( ase_worldNormal , ase_worldViewDir );
 				float clampResult16 = clamp( dotResult13 , 0.0 , 1.0 );
 				float smoothstepResult17 = smoothstep( _SmoothMin , _SmoothMax , clampResult16);
-				float Alpha18 = smoothstepResult17;
+				float Alpha18 = pow( smoothstepResult17 , _SmoothPower );
 				
 
 				float Alpha = Alpha18;
@@ -1078,6 +1082,7 @@ Shader "CommonGround"
 			float4 _MainColor;
 			float _SmoothMin;
 			float _SmoothMax;
+			float _SmoothPower;
 			#ifdef ASE_TESSELLATION
 				float _TessPhongStrength;
 				float _TessValue;
@@ -1232,7 +1237,7 @@ Shader "CommonGround"
 				float dotResult13 = dot( ase_worldNormal , ase_worldViewDir );
 				float clampResult16 = clamp( dotResult13 , 0.0 , 1.0 );
 				float smoothstepResult17 = smoothstep( _SmoothMin , _SmoothMax , clampResult16);
-				float Alpha18 = smoothstepResult17;
+				float Alpha18 = pow( smoothstepResult17 , _SmoothPower );
 				
 
 				surfaceDescription.Alpha = Alpha18;
@@ -1328,6 +1333,7 @@ Shader "CommonGround"
 			float4 _MainColor;
 			float _SmoothMin;
 			float _SmoothMax;
+			float _SmoothPower;
 			#ifdef ASE_TESSELLATION
 				float _TessPhongStrength;
 				float _TessValue;
@@ -1479,7 +1485,7 @@ Shader "CommonGround"
 				float dotResult13 = dot( ase_worldNormal , ase_worldViewDir );
 				float clampResult16 = clamp( dotResult13 , 0.0 , 1.0 );
 				float smoothstepResult17 = smoothstep( _SmoothMin , _SmoothMax , clampResult16);
-				float Alpha18 = smoothstepResult17;
+				float Alpha18 = pow( smoothstepResult17 , _SmoothPower );
 				
 
 				surfaceDescription.Alpha = Alpha18;
@@ -1588,6 +1594,7 @@ Shader "CommonGround"
 			float4 _MainColor;
 			float _SmoothMin;
 			float _SmoothMax;
+			float _SmoothPower;
 			#ifdef ASE_TESSELLATION
 				float _TessPhongStrength;
 				float _TessValue;
@@ -1742,7 +1749,7 @@ Shader "CommonGround"
 				float dotResult13 = dot( IN.clipPosV.xyz , ase_worldViewDir );
 				float clampResult16 = clamp( dotResult13 , 0.0 , 1.0 );
 				float smoothstepResult17 = smoothstep( _SmoothMin , _SmoothMax , clampResult16);
-				float Alpha18 = smoothstepResult17;
+				float Alpha18 = pow( smoothstepResult17 , _SmoothPower );
 				
 
 				float Alpha = Alpha18;
@@ -1786,15 +1793,17 @@ Shader "CommonGround"
 }
 /*ASEBEGIN
 Version=19603
-Node;AmplifyShaderEditor.CommentaryNode;10;-1760,592;Inherit;False;1374.251;449.3857;Comment;8;18;17;16;15;14;13;12;11;;1,1,1,1;0;0
-Node;AmplifyShaderEditor.WorldNormalVector;11;-1696,640;Inherit;False;False;1;0;FLOAT3;0,0,1;False;4;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3
-Node;AmplifyShaderEditor.ViewDirInputsCoordNode;12;-1696,832;Inherit;False;World;False;0;4;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3
-Node;AmplifyShaderEditor.DotProductOpNode;13;-1360,640;Inherit;False;2;0;FLOAT3;0,0,0;False;1;FLOAT3;0,0,0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.ClampOpNode;16;-1168,640;Inherit;False;3;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT;1;False;1;FLOAT;0
-Node;AmplifyShaderEditor.RangedFloatNode;15;-1216,960;Inherit;False;Property;_SmoothMax;Smooth  Max;2;0;Create;True;0;0;0;False;0;False;0.5;0.5;0;0;0;1;FLOAT;0
-Node;AmplifyShaderEditor.RangedFloatNode;14;-1216,848;Inherit;False;Property;_SmoothMin;Smooth  Min;1;0;Create;True;0;0;0;False;0;False;0.05;0.05;0;0;0;1;FLOAT;0
-Node;AmplifyShaderEditor.SmoothstepOpNode;17;-944,640;Inherit;False;3;0;FLOAT;0;False;1;FLOAT;0.05;False;2;FLOAT;0.5;False;1;FLOAT;0
-Node;AmplifyShaderEditor.RegisterLocalVarNode;18;-624,640;Inherit;False;Alpha;-1;True;1;0;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.CommentaryNode;10;-1760,594;Inherit;False;2151.931;1029.412;Comment;10;18;17;14;15;16;13;12;11;41;42;;1,1,1,1;0;0
+Node;AmplifyShaderEditor.WorldNormalVector;11;-1696,642;Inherit;False;False;1;0;FLOAT3;0,0,1;False;4;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3
+Node;AmplifyShaderEditor.ViewDirInputsCoordNode;12;-1696,834;Inherit;False;World;False;0;4;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3
+Node;AmplifyShaderEditor.DotProductOpNode;13;-1360,642;Inherit;False;2;0;FLOAT3;0,0,0;False;1;FLOAT3;0,0,0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.ClampOpNode;16;-1168,642;Inherit;False;3;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT;1;False;1;FLOAT;0
+Node;AmplifyShaderEditor.RangedFloatNode;15;-1216,962;Inherit;False;Property;_SmoothMax;Smooth  Max;2;0;Create;True;0;0;0;False;0;False;0.5;0.5;0;0;0;1;FLOAT;0
+Node;AmplifyShaderEditor.RangedFloatNode;14;-1216,850;Inherit;False;Property;_SmoothMin;Smooth  Min;1;0;Create;True;0;0;0;False;0;False;0.05;0.05;0;0;0;1;FLOAT;0
+Node;AmplifyShaderEditor.SmoothstepOpNode;17;-944,642;Inherit;False;3;0;FLOAT;0;False;1;FLOAT;0.05;False;2;FLOAT;0.5;False;1;FLOAT;0
+Node;AmplifyShaderEditor.RangedFloatNode;42;-848,976;Inherit;False;Property;_SmoothPower;SmoothPower;3;0;Create;True;0;0;0;False;0;False;0;0;0;0;0;1;FLOAT;0
+Node;AmplifyShaderEditor.PowerNode;41;-515.3413,708.7132;Inherit;False;False;2;0;FLOAT;0;False;1;FLOAT;1;False;1;FLOAT;0
+Node;AmplifyShaderEditor.RegisterLocalVarNode;18;-112,720;Inherit;False;Alpha;-1;True;1;0;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.ColorNode;20;-576,-128;Inherit;False;Property;_MainColor;MainColor;0;0;Create;True;0;0;0;False;0;False;1,1,1,1;0.2735848,0.2735848,0.2735848,1;True;True;0;6;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4;FLOAT3;5
 Node;AmplifyShaderEditor.GetLocalVarNode;19;-544,128;Inherit;False;18;Alpha;1;0;OBJECT;;False;1;FLOAT;0
 Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;31;128,-128;Float;False;False;-1;2;UnityEditor.ShaderGraphUnlitGUI;0;13;New Amplify Shader;2992e84f91cbeb14eab234972e07ea9d;True;ExtraPrePass;0;0;ExtraPrePass;5;False;False;False;False;False;False;False;False;False;False;False;False;True;0;False;;False;True;0;False;;False;False;False;False;False;False;False;False;False;True;False;0;False;;255;False;;255;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;False;False;False;False;True;4;RenderPipeline=UniversalPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;UniversalMaterialType=Unlit;True;5;True;12;all;0;False;True;1;1;False;;0;False;;0;1;False;;0;False;;False;False;False;False;False;False;False;False;False;False;False;False;True;0;False;;False;True;True;True;True;True;0;False;;False;False;False;False;False;False;False;True;False;0;False;;255;False;;255;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;False;True;1;False;;True;3;False;;True;True;0;False;;0;False;;True;0;False;False;0;;0;0;Standard;0;False;0
@@ -1813,8 +1822,10 @@ WireConnection;16;0;13;0
 WireConnection;17;0;16;0
 WireConnection;17;1;14;0
 WireConnection;17;2;15;0
-WireConnection;18;0;17;0
+WireConnection;41;0;17;0
+WireConnection;41;1;42;0
+WireConnection;18;0;41;0
 WireConnection;32;2;20;0
 WireConnection;32;3;19;0
 ASEEND*/
-//CHKSM=0FCEE672183C4A49DB75FF215EBEF41D8D312313
+//CHKSM=2A062C5465AC6F37E25D8E5B62091277E827CA6B

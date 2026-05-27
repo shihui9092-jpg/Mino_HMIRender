@@ -2,10 +2,14 @@ Shader "MinoHMI/PlanarReflectionTransparentOnly"
 {
     Properties
     {
-        [Header(Reflection)]
-        _ReflectionTint("Reflection Tint", Color) = (1, 1, 1, 1)
-        _ReflectionIntensity("Reflection Intensity", Range(0, 1)) = 1.0
-        _AlphaCutoff("Alpha Cutoff", Range(0, 1)) = 0.01
+        [Header((_Reflection))]
+        [Space(5)]
+        _ReflectionTint("反射色调", Color) = (1, 1, 1, 1)
+        _ReflectionIntensity("反射强度", Range(0, 1)) = 1.0
+
+        [Header((_Alpha))]
+        [Space(5)]
+        _AlphaCutoff("透明裁剪", Range(0, 1)) = 0.01
     }
 
     SubShader

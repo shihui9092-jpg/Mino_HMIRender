@@ -9,20 +9,20 @@ namespace MinoHMI.Rendering
     public class PlanarReflectionManager : MonoBehaviour
     {
         [Header("引用")]
-        [Tooltip("反射设置配置")]
+        [Tooltip("平面反射设置资源")]
         public PlanarReflectionSettings settings;
         
-        [Tooltip("反射相机组件")]
+        [Tooltip("平面反射相机组件")]
         public PlanarReflectionCamera reflectionCamera;
         
-        [Tooltip("反射平面组件")]
+        [Tooltip("平面反射地面组件列表")]
         public PlanarReflectionPlane[] reflectionPlanes;
 
         [Header("运行时控制")]
-        [Tooltip("是否启用反射")]
+        [Tooltip("启用平面反射")]
         public bool enableReflection = true;
         
-        [Tooltip("运行时质量等级")]
+        [Tooltip("运行时反射质量等级")]
         public ReflectionQuality runtimeQuality = ReflectionQuality.Medium;
 
         private ReflectionQualitySettings currentSettings;
@@ -79,6 +79,7 @@ namespace MinoHMI.Rendering
                 return;
 
             settings.currentQuality = quality;
+            runtimeQuality = quality;
             currentSettings = settings.GetCurrentQualitySettings();
 
             // 应用到反射相机

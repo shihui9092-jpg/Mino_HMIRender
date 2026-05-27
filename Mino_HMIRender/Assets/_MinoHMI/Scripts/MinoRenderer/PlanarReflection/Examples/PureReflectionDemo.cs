@@ -10,10 +10,10 @@ namespace MinoHMI.Rendering.Examples
     public class PureReflectionDemo : MonoBehaviour
     {
         [Header("反射材质")]
-        [Tooltip("使用 PlanarReflectionPure Shader 的材质")]
+        [Tooltip("使用平面反射 Shader 的材质")]
         public Material reflectionMaterial;
 
-        [Header("UI控件 (可选)")]
+        [Header("UI 控件(可选)")]
         public Slider intensitySlider;
         public Slider alphaSlider;
         public Slider fresnelPowerSlider;

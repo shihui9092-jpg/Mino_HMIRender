@@ -13,7 +13,7 @@ namespace MinoHMI.Rendering.Examples
         public PlanarReflectionManager reflectionManager;
         public PlanarReflectionPlane reflectionPlane;
 
-        [Header("UI控件(可选)")]
+        [Header("UI 控件(可选)")]
         public Toggle reflectionToggle;
         public Slider intensitySlider;
         public Dropdown qualityDropdown;

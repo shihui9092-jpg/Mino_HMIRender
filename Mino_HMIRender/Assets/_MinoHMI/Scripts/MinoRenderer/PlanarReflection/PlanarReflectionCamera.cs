@@ -15,11 +15,11 @@ namespace MinoHMI.Rendering
         [Tooltip("反射纹理分辨率")]
         public Vector2Int reflectionResolution = new Vector2Int(512, 512);
         
-        [Tooltip("反射纹理质量")]
+        [Tooltip("反射纹理分辨率缩放")]
         [Range(0.25f, 1)]
         public float resolutionScale = 1.0f;
         
-        [Tooltip("是否使用HDR")]
+        [Tooltip("使用 HDR 渲染纹理格式")]
         public bool useHDR = false;
         
         [Tooltip("反射层级遮罩")]
@@ -28,15 +28,15 @@ namespace MinoHMI.Rendering
         [Tooltip("裁剪平面偏移")]
         public float clipPlaneOffset = 0.07f;
 
-        [Header("性能优化")]
-        [Tooltip("最大反射距离")]
+        [Header("性能")]
+        [Tooltip("最大反射渲染距离")]
         public float maxReflectionDistance = 100f;
 
-        [Tooltip("反射更新频率(每N帧渲染一次,1=每帧)")]
+        [Tooltip("反射更新频率(每 N 帧渲染一次, 1=每帧)")]
         [Range(1, 10)]
         public int reflectionUpdateRate = 1;
         
-        [Tooltip("是否启用反射")]
+        [Tooltip("启用平面反射渲染")]
         public bool enableReflection = true;
 
         // 私有成员

@@ -9,27 +9,29 @@ namespace MinoHMI.Rendering
     public class PlanarReflectionPerformanceMonitor : MonoBehaviour
     {
         [Header("监控设置")]
-        [Tooltip("是否显示性能信息")]
+        [Tooltip("显示性能叠加层")]
         public bool showPerformanceInfo = true;
         
         [Tooltip("目标帧率")]
         public int targetFrameRate = 60;
         
-        [Tooltip("自动优化")]
+        [Tooltip("自动调整反射质量")]
         public bool autoOptimize = true;
 
         [Header("引用")]
         public PlanarReflectionManager reflectionManager;
 
-        // 性能数据
-        private float deltaTime = 0.0f;
-        private int frameCount = 0;
-        private float fps = 0.0f;
-        private float updateInterval = 0.5f;
-        private float accumulatedTime = 0.0f;
+        private int frameCount;
+        private float currentFps;
+        private float averageFrameTimeMs;
+        private float statsIntervalSeconds = 0.5f;
+        private float accumulatedStatsTime;
+        private float lastAutoOptimizeTime = -999f;
+
+        private const float AutoOptimizeCooldownSeconds = 2f;
 
         private GUIStyle labelStyle;
-        private bool initialized = false;
+        private bool initialized;
 
         private void Start()
         {
@@ -54,14 +56,14 @@ namespace MinoHMI.Rendering
         private void UpdateFPS()
         {
             frameCount++;
-            deltaTime += Time.unscaledDeltaTime;
-            accumulatedTime += Time.unscaledDeltaTime;
+            accumulatedStatsTime += Time.unscaledDeltaTime;
 
-            if (accumulatedTime >= updateInterval)
+            if (accumulatedStatsTime >= statsIntervalSeconds)
             {
-                fps = frameCount / accumulatedTime;
+                currentFps = frameCount / accumulatedStatsTime;
+                averageFrameTimeMs = (accumulatedStatsTime / Mathf.Max(1, frameCount)) * 1000f;
                 frameCount = 0;
-                accumulatedTime = 0.0f;
+                accumulatedStatsTime = 0f;
             }
         }
 
@@ -70,42 +72,47 @@ namespace MinoHMI.Rendering
             if (reflectionManager == null || !reflectionManager.enableReflection)
                 return;
 
-            // 根据帧率自动调整质量
-            if (fps < targetFrameRate * 0.8f) // 低于目标80%
+            if (Time.unscaledTime - lastAutoOptimizeTime < AutoOptimizeCooldownSeconds)
+                return;
+
+            if (currentFps < targetFrameRate * 0.8f)
             {
-                // 降低质量
                 var currentQuality = reflectionManager.settings?.currentQuality ?? ReflectionQuality.Medium;
                 
                 if (currentQuality == ReflectionQuality.Ultra)
                 {
                     reflectionManager.ApplyQualitySettings(ReflectionQuality.High);
-                    Debug.Log("[性能优化] 降低反射质量: Ultra -> High");
+                    lastAutoOptimizeTime = Time.unscaledTime;
+                    Debug.Log("[PlanarReflection] 自动降质: Ultra -> High");
                 }
                 else if (currentQuality == ReflectionQuality.High)
                 {
                     reflectionManager.ApplyQualitySettings(ReflectionQuality.Medium);
-                    Debug.Log("[性能优化] 降低反射质量: High -> Medium");
+                    lastAutoOptimizeTime = Time.unscaledTime;
+                    Debug.Log("[PlanarReflection] 自动降质: High -> Medium");
                 }
                 else if (currentQuality == ReflectionQuality.Medium)
                 {
                     reflectionManager.ApplyQualitySettings(ReflectionQuality.Low);
-                    Debug.Log("[性能优化] 降低反射质量: Medium -> Low");
+                    lastAutoOptimizeTime = Time.unscaledTime;
+                    Debug.Log("[PlanarReflection] 自动降质: Medium -> Low");
                 }
             }
-            else if (fps > targetFrameRate * 1.2f) // 高于目标120%
+            else if (currentFps > targetFrameRate * 1.2f)
             {
-                // 提升质量
                 var currentQuality = reflectionManager.settings?.currentQuality ?? ReflectionQuality.Medium;
                 
                 if (currentQuality == ReflectionQuality.Low)
                 {
                     reflectionManager.ApplyQualitySettings(ReflectionQuality.Medium);
-                    Debug.Log("[性能优化] 提升反射质量: Low -> Medium");
+                    lastAutoOptimizeTime = Time.unscaledTime;
+                    Debug.Log("[PlanarReflection] 自动升质: Low -> Medium");
                 }
                 else if (currentQuality == ReflectionQuality.Medium)
                 {
                     reflectionManager.ApplyQualitySettings(ReflectionQuality.High);
-                    Debug.Log("[性能优化] 提升反射质量: Medium -> High");
+                    lastAutoOptimizeTime = Time.unscaledTime;
+                    Debug.Log("[PlanarReflection] 自动升质: Medium -> High");
                 }
             }
         }
@@ -123,26 +130,19 @@ namespace MinoHMI.Rendering
             float width = 300;
             float lineHeight = 20;
 
-            // 背景
             GUI.Box(new Rect(x - 5, y - 5, width + 10, lineHeight * 8 + 10), "");
-
-            // 标题
-            GUI.Label(new Rect(x, y, width, lineHeight), "=== 反射性能监控 ===", labelStyle);
+            GUI.Label(new Rect(x, y, width, lineHeight), "=== 平面反射性能监控 ===", labelStyle);
             y += lineHeight;
 
-            // FPS
-            Color fpsColor = fps >= targetFrameRate ? Color.green : (fps >= targetFrameRate * 0.8f ? Color.yellow : Color.red);
+            Color fpsColor = currentFps >= targetFrameRate ? Color.green : (currentFps >= targetFrameRate * 0.8f ? Color.yellow : Color.red);
             GUI.contentColor = fpsColor;
-            GUI.Label(new Rect(x, y, width, lineHeight), $"FPS: {fps:F1} (目标: {targetFrameRate})", labelStyle);
+            GUI.Label(new Rect(x, y, width, lineHeight), $"FPS: {currentFps:F1} (目标: {targetFrameRate})", labelStyle);
             GUI.contentColor = Color.white;
             y += lineHeight;
 
-            // 帧时间
-            float ms = deltaTime * 1000.0f;
-            GUI.Label(new Rect(x, y, width, lineHeight), $"帧时间: {ms:F2} ms", labelStyle);
+            GUI.Label(new Rect(x, y, width, lineHeight), $"帧时间: {averageFrameTimeMs:F2} ms", labelStyle);
             y += lineHeight;
 
-            // 反射状态
             if (reflectionManager != null)
             {
                 bool enabled = reflectionManager.enableReflection;
@@ -158,13 +158,13 @@ namespace MinoHMI.Rendering
                     y += lineHeight;
 
                     var settings = reflectionManager.settings.GetCurrentQualitySettings();
-                    GUI.Label(new Rect(x, y, width, lineHeight), 
-                        $"分辨率: {settings.resolution.x}x{settings.resolution.y} ({settings.resolutionScale:F2}x)", 
+                    GUI.Label(new Rect(x, y, width, lineHeight),
+                        $"分辨率: {settings.resolution.x}x{settings.resolution.y} ({settings.resolutionScale:F2}x)",
                         labelStyle);
                     y += lineHeight;
 
-                    GUI.Label(new Rect(x, y, width, lineHeight), 
-                        $"HDR: {(settings.useHDR ? "开启" : "关闭")} | 更新率: 1/{settings.updateRate}", 
+                    GUI.Label(new Rect(x, y, width, lineHeight),
+                        $"HDR: {(settings.useHDR ? "开启" : "关闭")} | 更新率: 1/{settings.updateRate}",
                         labelStyle);
                     y += lineHeight;
                 }
@@ -177,7 +177,6 @@ namespace MinoHMI.Rendering
                 y += lineHeight;
             }
 
-            // 自动优化状态
             GUI.contentColor = autoOptimize ? Color.cyan : Color.gray;
             GUI.Label(new Rect(x, y, width, lineHeight), $"自动优化: {(autoOptimize ? "启用" : "禁用")}", labelStyle);
             GUI.contentColor = Color.white;
@@ -201,9 +200,9 @@ namespace MinoHMI.Rendering
         {
             PerformanceReport report = new PerformanceReport
             {
-                currentFPS = fps,
+                currentFPS = currentFps,
                 targetFPS = targetFrameRate,
-                frameTime = deltaTime * 1000.0f,
+                frameTime = averageFrameTimeMs,
                 reflectionEnabled = reflectionManager?.enableReflection ?? false
             };
 
@@ -226,16 +225,15 @@ namespace MinoHMI.Rendering
         /// </summary>
         public PerformanceLevel EvaluatePerformance()
         {
-            float targetRatio = fps / targetFrameRate;
+            float targetRatio = currentFps / targetFrameRate;
 
             if (targetRatio >= 1.0f)
                 return PerformanceLevel.Excellent;
-            else if (targetRatio >= 0.9f)
+            if (targetRatio >= 0.9f)
                 return PerformanceLevel.Good;
-            else if (targetRatio >= 0.7f)
+            if (targetRatio >= 0.7f)
                 return PerformanceLevel.Acceptable;
-            else
-                return PerformanceLevel.Poor;
+            return PerformanceLevel.Poor;
         }
     }
 
@@ -260,7 +258,7 @@ namespace MinoHMI.Rendering
         {
             return $"性能报告:\n" +
                    $"FPS: {currentFPS:F1} / {targetFPS}\n" +
-                   $"帧时间: {frameTime:F2}ms\n" +
+                   $"帧时间: {frameTime:F2} ms\n" +
                    $"反射: {(reflectionEnabled ? "启用" : "禁用")}\n" +
                    $"质量: {currentQuality}\n" +
                    $"分辨率: {resolutionWidth}x{resolutionHeight} ({resolutionScale:F2}x)\n" +
@@ -274,9 +272,9 @@ namespace MinoHMI.Rendering
     /// </summary>
     public enum PerformanceLevel
     {
-        Poor,       // 差
-        Acceptable, // 可接受
-        Good,       // 良好
-        Excellent   // 优秀
+        Poor,
+        Acceptable,
+        Good,
+        Excellent
     }
 }

@@ -2,22 +2,26 @@ Shader "MinoHMI/PlanarReflectionPlane"
 {
     Properties
     {
-        [Header(Reflection)]
-        _ReflectionTint("Reflection Tint", Color) = (1, 1, 1, 1)
-        _ReflectionIntensity("Reflection Intensity", Range(0, 1)) = 0.5
-        _ReflectionBlur("Reflection Blur", Range(0, 1)) = 0.0
+        [Header((_Reflection))]
+        [Space(5)]
+        _ReflectionTint("反射色调", Color) = (1, 1, 1, 1)
+        _ReflectionIntensity("反射强度", Range(0, 1)) = 0.5
+        _ReflectionBlur("反射模糊", Range(0, 1)) = 0.0
+        _ReflectionFadeParams("淡出参数(起始,结束,斜率,预留)", Vector) = (20, 50, 0.033, 0)
 
-        [Header(Fresnel)]
-        _FresnelPower("Fresnel Power", Range(0, 5)) = 2.0
+        [Header((_Surface))]
+        [Space(5)]
+        _FresnelPower("菲涅尔强度", Range(0, 5)) = 2.0
+        _Roughness("粗糙度", Range(0, 1)) = 0.1
 
-        [Header(Surface)]
-        _Roughness("Roughness", Range(0, 1)) = 0.1
+        [Header((_Mask))]
+        [Space(5)]
+        _ScreenMaskRange("屏幕遮罩(底部,顶部,预留,强度)", Vector) = (0, 0.65, 0, 1)
+        _ScreenMaskSoftness("屏幕遮罩柔化", Range(0, 0.5)) = 0.05
 
-        [Header(Distance Fade)]
-        _ReflectionFadeParams("Fade Params (Start, End, 1/(End-Start), unused)", Vector) = (20, 50, 0.033, 0)
-
-        [Header(Alpha)]
-        _AlphaCutoff("Alpha Cutoff", Range(0, 1)) = 0.01
+        [Header((_Alpha))]
+        [Space(5)]
+        _AlphaCutoff("透明裁剪", Range(0, 1)) = 0.01
     }
 
     SubShader
@@ -50,6 +54,7 @@ Shader "MinoHMI/PlanarReflectionPlane"
             {
                 float4 positionOS : POSITION;
                 float3 normalOS   : NORMAL;
+                float2 uv         : TEXCOORD0;
                 UNITY_VERTEX_INPUT_INSTANCE_ID
             };
 
@@ -59,6 +64,7 @@ Shader "MinoHMI/PlanarReflectionPlane"
                 float3 positionWS : TEXCOORD0;
                 float3 normalWS   : TEXCOORD1;
                 float3 viewDirWS  : TEXCOORD2;
+                float2 uv         : TEXCOORD3;
                 UNITY_VERTEX_INPUT_INSTANCE_ID
                 UNITY_VERTEX_OUTPUT_STEREO
             };
@@ -70,6 +76,8 @@ Shader "MinoHMI/PlanarReflectionPlane"
             CBUFFER_START(UnityPerMaterial)
                 float4 _ReflectionTint;
                 float4 _ReflectionFadeParams;
+                float4 _ScreenMaskRange;
+                float _ScreenMaskSoftness;
                 float _ReflectionIntensity;
                 float _ReflectionBlur;
                 float _FresnelPower;
@@ -91,6 +99,7 @@ Shader "MinoHMI/PlanarReflectionPlane"
                 output.positionWS = vertexInput.positionWS;
                 output.normalWS = normalInput.normalWS;
                 output.viewDirWS = GetWorldSpaceViewDir(vertexInput.positionWS);
+                output.uv = input.uv;
 
                 return output;
             }
@@ -143,12 +152,16 @@ Shader "MinoHMI/PlanarReflectionPlane"
                 float roughnessFactor = 1.0 - (_Roughness * 0.8);
 
                 float finalIntensity = _ReflectionIntensity * fresnel * fadeFactor * roughnessFactor;
+                half screenMask = EvaluatePlanarReflectionScreenMask(
+                    input.positionCS,
+                    _ScreenMaskRange,
+                    _ScreenMaskSoftness);
 
-                reflectionColor.rgb *= finalIntensity;
-                reflectionColor.a *= finalIntensity;
+                reflectionColor.rgb *= finalIntensity * screenMask;
+                reflectionColor.a *= finalIntensity * screenMask;
 
-                // 除反射物体像素外全部透明
-                clip(reflectionColor.a - _AlphaCutoff);
+                half bottomUpHeightFactor = 1.0 - saturate(input.uv.y);
+                clip(reflectionColor.a - _AlphaCutoff * bottomUpHeightFactor);
                 return reflectionColor;
             }
             ENDHLSL

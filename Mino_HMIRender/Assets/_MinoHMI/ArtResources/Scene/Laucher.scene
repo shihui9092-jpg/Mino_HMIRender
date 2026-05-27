@@ -545,11 +545,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4816568681438574727, guid: 91ed8ab2f4782b245ba97845dfd22deb, type: 3}
       propertyPath: roughness
-      value: 0.3
+      value: 0.288
       objectReference: {fileID: 0}
     - target: {fileID: 4816568681438574727, guid: 91ed8ab2f4782b245ba97845dfd22deb, type: 3}
       propertyPath: fresnelPower
-      value: 3
+      value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4816568681438574727, guid: 91ed8ab2f4782b245ba97845dfd22deb, type: 3}
+      propertyPath: reflectionBlur
+      value: 0.297
+      objectReference: {fileID: 0}
+    - target: {fileID: 4816568681438574727, guid: 91ed8ab2f4782b245ba97845dfd22deb, type: 3}
+      propertyPath: reflectionIntensity
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5058098977146388138, guid: 91ed8ab2f4782b245ba97845dfd22deb, type: 3}
       propertyPath: m_Name
@@ -597,6 +605,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6858940222766215518, guid: 91ed8ab2f4782b245ba97845dfd22deb, type: 3}
       propertyPath: useHDR
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6858940222766215518, guid: 91ed8ab2f4782b245ba97845dfd22deb, type: 3}
+      propertyPath: reflectionUpdateRate
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6858940222766215518, guid: 91ed8ab2f4782b245ba97845dfd22deb, type: 3}

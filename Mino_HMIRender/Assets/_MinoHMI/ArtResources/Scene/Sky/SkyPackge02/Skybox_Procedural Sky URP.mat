@@ -29,14 +29,14 @@ Material:
     - _GroundGradient: 0.01
     - _HorizonBlur: 0.546
     - _HorizonOffset: 0
-    - _HorizonRange: 1.75
+    - _HorizonRange: 1.524
     - _SunIntensity: 5
     - _SunSize: 0.001
     - _ZenithGradient: 0.01
     m_Colors:
     - _GroundBlendColor: {r: 0.21698111, g: 0.21698111, b: 0.21698111, a: 1}
     - _GroundColor: {r: 0, g: 0, b: 0, a: 1}
-    - _HorizonColor: {r: 0.7264151, g: 0.7264151, b: 0.7264151, a: 1}
+    - _HorizonColor: {r: 0.37793696, g: 0.4539654, b: 0.5377358, a: 1}
     - _SunColor: {r: 0, g: 0, b: 0, a: 1}
     - _SunDirection: {r: 55, g: 26.15, b: -108.41, a: 0}
     - _ZenithBlendColor: {r: 0.3962264, g: 0.3962264, b: 0.3962264, a: 1}

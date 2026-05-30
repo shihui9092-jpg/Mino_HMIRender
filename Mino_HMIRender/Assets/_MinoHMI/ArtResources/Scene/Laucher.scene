@@ -539,6 +539,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 94662360}
     m_Modifications:
+    - target: {fileID: 1721900203477271909, guid: 91ed8ab2f4782b245ba97845dfd22deb, type: 3}
+      propertyPath: m_Mode
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1721900203477271909, guid: 91ed8ab2f4782b245ba97845dfd22deb, type: 3}
+      propertyPath: m_IntensityMultiplier
+      value: 3.09
+      objectReference: {fileID: 0}
     - target: {fileID: 4616519996321422061, guid: 91ed8ab2f4782b245ba97845dfd22deb, type: 3}
       propertyPath: enableReflection
       value: 1

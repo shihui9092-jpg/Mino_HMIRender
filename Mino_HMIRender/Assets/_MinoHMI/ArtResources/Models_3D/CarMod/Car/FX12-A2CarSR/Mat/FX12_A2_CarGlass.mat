@@ -12,7 +12,8 @@ Material:
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
-  m_InvalidKeywords: []
+  m_InvalidKeywords:
+  - _SPECULAR_SETUP
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -36,7 +37,11 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _CubeMap:
-        m_Texture: {fileID: 8900000, guid: 969f6ffe73546dd40aa7978ac55ca04e, type: 3}
+        m_Texture: {fileID: 8900000, guid: 422acd1e07856024d9e2a65d07e0f332, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _CubeMap1:
+        m_Texture: {fileID: 8900000, guid: a2b47c784eb592247bfe2af3045965d7, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _CubeMap_CG:
@@ -56,6 +61,10 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _EmissionMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _FlowTex:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
@@ -79,7 +88,15 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _RainMask:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _SpecGlossMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _WindowMask:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
@@ -101,7 +118,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Alpha: 0.959
+    - _Alpha: 1
     - _AlphaClip: 0
     - _AlphaCutoff: 0.5
     - _AlphaToMask: 0
@@ -124,27 +141,36 @@ Material:
     - _Emission: 1
     - _EnvironmentReflections: 1
     - _FLightScale: 0
+    - _FlowControl: 0
+    - _FlowSpeed: 0
     - _GlossMapScale: 1
     - _Glossiness: 0.59999996
     - _GlossyReflections: 1
-    - _Metallic: 0
+    - _Metallic: 0.553
     - _Mode: 0
     - _NormalScale: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.02
     - _QueueControl: 0
     - _QueueOffset: 0
+    - _RainAlpha: 1
+    - _RainControl: 0
     - _ReceiveShadows: 1
+    - _Rotation: 0
+    - _RotationSpeed: 0
+    - _RotationSwitch: 1
     - _San_jb: 19.5
     - _San_ld: 0.94
-    - _Smoothness: 0.59999996
+    - _Smoothness: 0
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
+    - _Speed: 0.1
     - _SrcBlend: 1
     - _SrcBlendAlpha: 1
     - _Surface: 0
     - _UVSec: 0
-    - _WorkflowMode: 1
+    - _WindowMaskControl: 0
+    - _WorkflowMode: 0
     - _ZWrite: 1
     - _Zhu_Fro__ld: 0.1
     - _Zhu_Fro_jb: 19.5
@@ -154,15 +180,18 @@ Material:
     - _BaseColor: {r: 0, g: 0, b: 0, a: 1}
     - _Charge_Color: {r: 0.01350364, g: 0.6886792, b: 0, a: 1}
     - _Color: {r: 0, g: 0, b: 0, a: 1}
-    - _CubeColor: {r: 0.13207549, g: 0.13207549, b: 0.13207549, a: 1}
+    - _Color0: {r: 1, g: 1, b: 1, a: 1}
+    - _CubeColor: {r: 0.26415092, g: 0.26415092, b: 0.26415092, a: 1}
     - _CubeColorHDR: {r: 1, g: 1, b: 1, a: 1}
     - _CubeColor_CG: {r: 0.2735845, g: 0.2735845, b: 0.2735845, a: 0.8862745}
     - _CubeColor_HDR: {r: 0.5660378, g: 0.5660378, b: 0.5660378, a: 1}
     - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
+    - _FlowColor: {r: 0, g: 0, b: 0, a: 0}
     - _MApDirection: {r: 1, g: 1, b: 1, a: 0}
     - _San_col: {r: 0.9411765, g: 0.9529411, b: 0.9803922, a: 1}
     - _San_wz: {r: -26.4, g: 60, b: 0, a: 0}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
+    - _WindowMaskColor: {r: 0, g: 0, b: 0, a: 0}
     - _Zhu_Fro__wz: {r: 23.3, g: 19.2, b: 22.9, a: 0}
     - _Zhu_Fro_col: {r: 0.9396708, g: 0.9517695, b: 0.98, a: 1}
     - _Zhu_San_col: {r: 0.9411765, g: 0.9529411, b: 0.9803922, a: 1}

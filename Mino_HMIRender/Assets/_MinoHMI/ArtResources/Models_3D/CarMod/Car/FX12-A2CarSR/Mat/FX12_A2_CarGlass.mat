@@ -65,7 +65,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _FlowTex:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 3782122390e479d43ad8354e291a0342, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
@@ -142,7 +142,9 @@ Material:
     - _EnvironmentReflections: 1
     - _FLightScale: 0
     - _FlowControl: 0
+    - _FlowEmission: 2
     - _FlowSpeed: 0
+    - _FlowToggle: 0
     - _GlossMapScale: 1
     - _Glossiness: 0.59999996
     - _GlossyReflections: 1
@@ -181,12 +183,14 @@ Material:
     - _Charge_Color: {r: 0.01350364, g: 0.6886792, b: 0, a: 1}
     - _Color: {r: 0, g: 0, b: 0, a: 1}
     - _Color0: {r: 1, g: 1, b: 1, a: 1}
-    - _CubeColor: {r: 0.26415092, g: 0.26415092, b: 0.26415092, a: 1}
+    - _CubeColor: {r: 0.26415086, g: 0.26415086, b: 0.26415086, a: 1}
     - _CubeColorHDR: {r: 1, g: 1, b: 1, a: 1}
     - _CubeColor_CG: {r: 0.2735845, g: 0.2735845, b: 0.2735845, a: 0.8862745}
     - _CubeColor_HDR: {r: 0.5660378, g: 0.5660378, b: 0.5660378, a: 1}
     - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
-    - _FlowColor: {r: 0, g: 0, b: 0, a: 0}
+    - _FlowColor: {r: 0.37254897, g: 0.54509795, b: 1, a: 0}
+    - _FlowSpeed: {r: 0, g: -0.5, b: 0, a: 0}
+    - _FlowTilling: {r: 5, g: 0.3, b: 0, a: 0}
     - _MApDirection: {r: 1, g: 1, b: 1, a: 0}
     - _San_col: {r: 0.9411765, g: 0.9529411, b: 0.9803922, a: 1}
     - _San_wz: {r: -26.4, g: 60, b: 0, a: 0}

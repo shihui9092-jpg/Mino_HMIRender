@@ -167,6 +167,15 @@ public class MinoCameraController : MonoBehaviour
     [SerializeField, Min(0.1f)]
     private float autoReturnDelaySeconds = 3f;
 
+    [Header("性能设置")]
+    [Tooltip("开启后根据目标碰撞体修正相机距离；关闭可减少每帧碰撞检测开销")]
+    [SerializeField]
+    private bool enableCollisionDistanceCorrection = true;
+
+    [Tooltip("碰撞距离修正的检测间隔帧数。数值越大开销越低，但距离修正响应越慢")]
+    [SerializeField, Range(1, 10)]
+    private int collisionCheckFrameInterval = 2;
+
 #if UNITY_EDITOR
     [FormerlySerializedAs("cameraPresetList")]
     [SerializeField, HideInInspector]
@@ -227,10 +236,21 @@ public class MinoCameraController : MonoBehaviour
     private float lastScreenInteractionTime;
     private bool hasPendingAutoReturnToSelectedPreset;
     private bool hasViewChangedSinceSelectedPreset;
+    private int collisionCheckFrameCounter;
+    private Vector3 cachedMousePosition;
+    private float cachedMouseX;
+    private float cachedMouseY;
+    private float cachedMouseScroll;
+    private float cachedDeltaTime;
+    private bool cachedLeftMousePressed;
+    private bool cachedRightMousePressed;
+    private bool cachedMiddleMousePressed;
 
     // UI 射线检测缓存，避免每帧分配 List 与重复查询 Layer
     private static int cachedUiLayer = -1;
     private readonly List<RaycastResult> uiRaycastResultsCache = new List<RaycastResult>();
+    private PointerEventData pointerEventDataCache;
+    private EventSystem pointerEventSystemCache;
 
     /// <summary>为 true 时禁止鼠标操控相机与对象。</summary>
     [HideInInspector]
@@ -284,7 +304,7 @@ public class MinoCameraController : MonoBehaviour
 
     private void LateUpdate()
     {
-        bool isPointerOverUi = IsPointerOverUIElement();
+        UpdatePointerInputCache();
         bool isMouseOverGameView = IsMouseOverGameView();
 
         if (isMouseOverGameView)
@@ -292,21 +312,23 @@ public class MinoCameraController : MonoBehaviour
             HandleRuntimeHotkeys();
         }
 
-        UpdateAutoReturnInteractionState(isMouseOverGameView);
-
         if (isCameraLocked)
         {
             return;
         }
 
+        bool isPointerOverUi = ShouldCheckPointerOverUi(isMouseOverGameView) && IsPointerOverUIElement();
+        bool shouldBlockTopLeftInput = ShouldBlockInputInTopLeftCorner();
+        UpdateAutoReturnInteractionState(isMouseOverGameView);
+
         HandlePresetHotkeys();
 
-        if (TryAutoReturnToSelectedPreset(isPointerOverUi))
+        if (TryAutoReturnToSelectedPreset(isPointerOverUi, shouldBlockTopLeftInput))
         {
             return;
         }
 
-        if (ShouldBlockInputInTopLeftCorner())
+        if (shouldBlockTopLeftInput)
         {
             return;
         }
@@ -470,7 +492,7 @@ public class MinoCameraController : MonoBehaviour
         orbitPitch = pitch;
         smoothedOrbitDistance = smoothedDistance;
         ClearMotionSpeeds();
-        wasLeftMousePressed = Input.GetMouseButton(0);
+        wasLeftMousePressed = ReadLeftMousePressed();
         isDraggingTarget = false;
 
         if (applyTransformNow && orbitFocus != null)
@@ -615,6 +637,23 @@ public class MinoCameraController : MonoBehaviour
         return Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
     }
 
+    private void UpdatePointerInputCache()
+    {
+        cachedDeltaTime = Time.deltaTime;
+        cachedMousePosition = Input.mousePosition;
+        cachedMouseX = Input.GetAxis("Mouse X");
+        cachedMouseY = Input.GetAxis("Mouse Y");
+        cachedMouseScroll = Input.GetAxis("Mouse ScrollWheel");
+        cachedLeftMousePressed = Input.GetMouseButton(0);
+        cachedRightMousePressed = Input.GetMouseButton(1);
+        cachedMiddleMousePressed = Input.GetMouseButton(2);
+    }
+
+    private bool ReadLeftMousePressed()
+    {
+        return cachedDeltaTime > 0f ? cachedLeftMousePressed : Input.GetMouseButton(0);
+    }
+
     private void ClearMotionSpeeds()
     {
         currentYawSpeed = 0f;
@@ -640,7 +679,7 @@ public class MinoCameraController : MonoBehaviour
     /// <summary>重置轨道距离、碰撞缓存与速度状态。</summary>
     public void ResetCameraState()
     {
-        wasLeftMousePressed = Input.GetMouseButton(0);
+        wasLeftMousePressed = ReadLeftMousePressed();
         disableInput = false;
 
         smoothedOrbitDistance = orbitDistance;
@@ -753,17 +792,17 @@ public class MinoCameraController : MonoBehaviour
     }
 
     /// <summary>判断本帧是否发生了屏幕交互。</summary>
-    private static bool HasScreenInteractionThisFrame(bool isMouseOverGameView)
+    private bool HasScreenInteractionThisFrame(bool isMouseOverGameView)
     {
         if (!isMouseOverGameView)
         {
             return false;
         }
 
-        return Input.GetMouseButton(0)
-            || Input.GetMouseButton(1)
-            || Input.GetMouseButton(2)
-            || Mathf.Abs(Input.GetAxis("Mouse ScrollWheel")) > 0.0001f;
+        return cachedLeftMousePressed
+            || cachedRightMousePressed
+            || cachedMiddleMousePressed
+            || Mathf.Abs(cachedMouseScroll) > 0.0001f;
     }
 
     /// <summary>记录一次屏幕交互，重置自动回机位计时器。</summary>
@@ -775,14 +814,14 @@ public class MinoCameraController : MonoBehaviour
     }
 
     /// <summary>无屏幕交互达到阈值后，自动回到当前选中机位。</summary>
-    private bool TryAutoReturnToSelectedPreset(bool isPointerOverUi)
+    private bool TryAutoReturnToSelectedPreset(bool isPointerOverUi, bool shouldBlockTopLeftInput)
     {
         if (!enableAutoReturnToSelectedPreset
             || isPointerOverUi
             || isPresetTransitioning
             || !hasPendingAutoReturnToSelectedPreset
             || !hasViewChangedSinceSelectedPreset
-            || ShouldBlockInputInTopLeftCorner())
+            || shouldBlockTopLeftInput)
         {
             return false;
         }
@@ -875,17 +914,27 @@ public class MinoCameraController : MonoBehaviour
         }
     }
 
-    private static bool IsMouseOverGameView()
+    private bool IsMouseOverGameView()
     {
-        Vector3 mousePos = Input.mousePosition;
+        Vector3 mousePos = cachedMousePosition;
         return mousePos.x >= 0 && mousePos.y >= 0 && mousePos.x <= Screen.width && mousePos.y <= Screen.height;
     }
 
     /// <summary>屏蔽左上角区域输入，避免与叠加 UI 冲突。</summary>
-    private static bool ShouldBlockInputInTopLeftCorner()
+    private bool ShouldBlockInputInTopLeftCorner()
     {
-        Vector3 mousePosition = Input.mousePosition;
+        Vector3 mousePosition = cachedMousePosition;
         return mousePosition.x < Screen.width / 3f && mousePosition.y > Screen.height * 2f / 3f;
+    }
+
+    private bool ShouldCheckPointerOverUi(bool isMouseOverGameView)
+    {
+        return isMouseOverGameView
+            && (cachedLeftMousePressed
+                || cachedRightMousePressed
+                || cachedMiddleMousePressed
+                || Mathf.Abs(cachedMouseScroll) > 0.0001f
+                || enableAutoReturnToSelectedPreset);
     }
 
     private bool CanHandleInput(bool isMouseOverGameView, bool isPointerOverUi)
@@ -903,32 +952,32 @@ public class MinoCameraController : MonoBehaviour
 
         if (isDraggingTarget)
         {
-            if (Input.GetMouseButton(0) && !disableInput)
+            if (cachedLeftMousePressed && !disableInput)
             {
-                requestedTargetYawSpeed += (Input.GetAxis("Mouse X") * targetYawRotateSpeed * 0.02f - requestedTargetYawSpeed) * Time.deltaTime * 10f;
+                requestedTargetYawSpeed += (cachedMouseX * targetYawRotateSpeed * 0.02f - requestedTargetYawSpeed) * cachedDeltaTime * 10f;
             }
             else
             {
-                requestedTargetYawSpeed += (0f - requestedTargetYawSpeed) * Time.deltaTime * 4f;
+                requestedTargetYawSpeed += (0f - requestedTargetYawSpeed) * cachedDeltaTime * 4f;
             }
 
-            requestedYawSpeed += (0f - requestedYawSpeed) * Time.deltaTime * 4f;
-            requestedPitchSpeed += (0f - requestedPitchSpeed) * Time.deltaTime * 4f;
+            requestedYawSpeed += (0f - requestedYawSpeed) * cachedDeltaTime * 4f;
+            requestedPitchSpeed += (0f - requestedPitchSpeed) * cachedDeltaTime * 4f;
         }
         else
         {
-            if (Input.GetMouseButton(0) && !disableInput)
+            if (cachedLeftMousePressed && !disableInput)
             {
-                requestedYawSpeed += (Input.GetAxis("Mouse X") * orbitYawSpeed * 0.02f - requestedYawSpeed) * Time.deltaTime * 10f;
-                requestedPitchSpeed += (Input.GetAxis("Mouse Y") * orbitPitchSpeed * 0.02f - requestedPitchSpeed) * Time.deltaTime * 10f;
+                requestedYawSpeed += (cachedMouseX * orbitYawSpeed * 0.02f - requestedYawSpeed) * cachedDeltaTime * 10f;
+                requestedPitchSpeed += (cachedMouseY * orbitPitchSpeed * 0.02f - requestedPitchSpeed) * cachedDeltaTime * 10f;
             }
             else
             {
-                requestedYawSpeed += (0f - requestedYawSpeed) * Time.deltaTime * 4f;
-                requestedPitchSpeed += (0f - requestedPitchSpeed) * Time.deltaTime * 4f;
+                requestedYawSpeed += (0f - requestedYawSpeed) * cachedDeltaTime * 4f;
+                requestedPitchSpeed += (0f - requestedPitchSpeed) * cachedDeltaTime * 4f;
             }
 
-            requestedTargetYawSpeed += (0f - requestedTargetYawSpeed) * Time.deltaTime * 4f;
+            requestedTargetYawSpeed += (0f - requestedTargetYawSpeed) * cachedDeltaTime * 4f;
             if (enableDragRotateTarget)
             {
                 requestedTargetYawSpeed = 0f;
@@ -936,7 +985,7 @@ public class MinoCameraController : MonoBehaviour
             }
         }
 
-        currentTargetYawSpeed += (requestedTargetYawSpeed - currentTargetYawSpeed) * Time.deltaTime * 20f;
+        currentTargetYawSpeed += (requestedTargetYawSpeed - currentTargetYawSpeed) * cachedDeltaTime * 20f;
         if (enableDragRotateTarget)
         {
             if (enableDragRotateMainLight && mainLightTransform != null)
@@ -949,19 +998,19 @@ public class MinoCameraController : MonoBehaviour
             }
         }
 
-        currentYawSpeed += (requestedYawSpeed - currentYawSpeed) * Time.deltaTime * 20f;
-        currentPitchSpeed += (requestedPitchSpeed - currentPitchSpeed) * Time.deltaTime * 20f;
+        currentYawSpeed += (requestedYawSpeed - currentYawSpeed) * cachedDeltaTime * 20f;
+        currentPitchSpeed += (requestedPitchSpeed - currentPitchSpeed) * cachedDeltaTime * 20f;
         orbitYaw += currentYawSpeed;
         orbitPitch -= currentPitchSpeed;
         orbitPitch = ClampAngle(orbitPitch, pitchMinLimit + pitchAngleOffset, pitchMaxLimit + pitchAngleOffset);
 
-        orbitDistance -= Input.GetAxis("Mouse ScrollWheel") * scrollZoomSpeed;
+        orbitDistance -= cachedMouseScroll * scrollZoomSpeed;
         orbitDistance = Mathf.Clamp(orbitDistance, minOrbitDistance, maxOrbitDistance);
     }
 
     private void UpdateDragModeOnMouseDown()
     {
-        bool isLeftMousePressed = Input.GetMouseButton(0);
+        bool isLeftMousePressed = cachedLeftMousePressed;
         if (!wasLeftMousePressed && isLeftMousePressed)
         {
             isDraggingTarget = enableDragRotateTarget;
@@ -976,7 +1025,7 @@ public class MinoCameraController : MonoBehaviour
 
     private void UpdateSmoothedDistanceByCollision()
     {
-        if (orbitFocus == null)
+        if (!enableCollisionDistanceCorrection || orbitFocus == null)
         {
             smoothedOrbitDistance = orbitDistance;
             return;
@@ -986,6 +1035,16 @@ public class MinoCameraController : MonoBehaviour
         {
             smoothedOrbitDistance = orbitDistance;
             return;
+        }
+
+        int frameInterval = Mathf.Max(1, collisionCheckFrameInterval);
+        if (frameInterval > 1)
+        {
+            collisionCheckFrameCounter = (collisionCheckFrameCounter + 1) % frameInterval;
+            if (collisionCheckFrameCounter != 0)
+            {
+                return;
+            }
         }
 
         Vector3 toFocus = orbitFocus.position - transform.position;
@@ -999,6 +1058,8 @@ public class MinoCameraController : MonoBehaviour
         Vector3 viewDirection = toFocus.normalized;
         float requiredDistance = 0.01f;
         bool hitSurface = false;
+        Ray ray = new Ray(transform.position - viewDirection * targetBoundsMaxSize, viewDirection);
+        Vector3 focusPosition = orbitFocus.position;
 
         foreach (Collider collider in surfaceColliders)
         {
@@ -1007,17 +1068,17 @@ public class MinoCameraController : MonoBehaviour
                 continue;
             }
 
-            Ray ray = new Ray(transform.position - viewDirection * targetBoundsMaxSize, viewDirection);
             if (collider.Raycast(ray, out RaycastHit hit, Mathf.Infinity))
             {
-                requiredDistance = Mathf.Max(Vector3.Distance(hit.point, orbitFocus.position) + orbitDistance, requiredDistance);
+                float hitDistanceToFocus = (hit.point - focusPosition).magnitude;
+                requiredDistance = Mathf.Max(hitDistanceToFocus + orbitDistance, requiredDistance);
                 hitSurface = true;
             }
         }
 
         if (hitSurface)
         {
-            smoothedOrbitDistance += (requiredDistance - smoothedOrbitDistance) * Time.deltaTime * 4f;
+            smoothedOrbitDistance += (requiredDistance - smoothedOrbitDistance) * cachedDeltaTime * 4f;
         }
         else
         {
@@ -1057,8 +1118,6 @@ public class MinoCameraController : MonoBehaviour
         float shortestYawTarget = orbitYaw + Mathf.DeltaAngle(orbitYaw, angles.y);
         float shortestPitchTarget = orbitPitch + Mathf.DeltaAngle(orbitPitch, angles.x);
         isPresetTransitioning = true;
-
-        Debug.Log($"[MinoCameraController] 切换机位: yaw={shortestYawTarget:F1}°, pitch={shortestPitchTarget:F1}°, distance={preset.orbitDistance:F2}, duration={transitionDuration:F2}s", this);
 
         activePresetTween = DOTween.Sequence();
         // 移除直接 Tween transform.position,避免与 ApplyOrbitTransform() 的轨道计算冲突
@@ -1267,12 +1326,16 @@ public class MinoCameraController : MonoBehaviour
             return null;
         }
 
-        PointerEventData eventData = new PointerEventData(EventSystem.current)
+        if (pointerEventDataCache == null || pointerEventSystemCache != EventSystem.current)
         {
-            position = Input.mousePosition
-        };
+            pointerEventSystemCache = EventSystem.current;
+            pointerEventDataCache = new PointerEventData(pointerEventSystemCache);
+        }
+
+        pointerEventDataCache.Reset();
+        pointerEventDataCache.position = cachedMousePosition;
         uiRaycastResultsCache.Clear();
-        EventSystem.current.RaycastAll(eventData, uiRaycastResultsCache);
+        EventSystem.current.RaycastAll(pointerEventDataCache, uiRaycastResultsCache);
         return uiRaycastResultsCache;
     }
 }
